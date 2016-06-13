@@ -1,0 +1,52 @@
+<h3 ng-controller="atTheCityController" class="PCAS">
+    <select class="bg-select" id="Province" ng-change="selectPCAS(selectShenfeng)" ng-model="selectShenfeng">
+        <option value="">全部</option>
+        <option ng-repeat="x in PCAS" value="{{x.areaid + ',' + x.name}}">{{x.name}}</option>
+    </select> 
+    <select class="bg-select" id="City" ng-change="selectCity(selectChengshi)" ng-model="selectChengshi">
+        <option value="">全部</option>
+        <option ng-repeat="x in PCAS.city" value="{{x.areaid + ',' + x.name}}">{{x.name}}</option>
+    </select> 
+</h3>
+<div class="clearfix" ng-controller="atTheMngtController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        分校数量：（{{showTotalItems}}）
+        <button class="btn btn-pill-left btn-info atTheMap" ng-click="atTheMap()" type="button">地图分布</button>
+    </h4>
+    <div class="row">
+        <div class="col-xs-4 col-md-2 courseList">
+            <a href="#" ng-click="goAddAtThe(1)" class="dashed">
+                <img src="app/img/add.png">
+                <p>添加分校</p>
+            </a>
+        </div>
+        <div class="col-xs-4 col-md-2 courseList" ng-repeat="a in atThe" ng-mouseleave="closeCourseAct($index)">
+            <p class="courseAction">
+                <i class="fa fa-trash-o c-btn removeIco" ng-click="removeBranch(a.branchid)"></i>
+            </p>
+            <a href="#" ng-click="showAtTheDetails(a.name,a.branchid)" ng-mouseover="showCourseAct($index)">
+                <img ng-src="{{a.img}}">
+                <div class="courseDesc">
+                    <p ng-bind="a.name"></p>
+                    <small ng-bind="a.summary" title={{a.summary}}></small>
+                </div>
+            </a>
+        </div>
+    </div>
+    <pagination class="page-bg" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+    
+    <div class="mapShow">
+        <div id="map"></div>
+    </div>
+    
+</div>

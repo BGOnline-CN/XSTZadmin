@@ -1,0 +1,65 @@
+<h3>用户反馈</h3>
+<h4 class="page-header courseTitle">
+    根据用户反馈问题的轻重程度，给予一定量的学习币奖励
+</h4>
+<div class="panel panel-default" ng-controller="userFeedbackController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!--<div class="panel-heading clearfix">
+        <span class="panel-table-title">全部家长</span>
+        <div class="input-group">
+            <input type="text" placeholder="" class="input-sm form-control" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-sm btn-default">搜索</button>
+            </span>
+        </div>
+    </div>-->
+    <div class="table-responsive">
+        <table id="table-ext-1" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="width:5%;">头像</th>
+                    <th style="width:15%;">用户</th>
+                    <th style="width:10%;">电话号码</th>
+                    <th style="width:15%;">邮箱</th>
+                    <th style="width:10%;">所得奖励</th>
+                    <th style="width:25%;">内容</th>
+                    <th style="width:15%;">时间</th>
+                    <th style="width:5%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td ng-class="FNullType" colspan="8">暂无反馈</td>
+                </tr>
+                <tr ng-repeat="f in feedback">
+                    <td>
+                        <div class="media">
+                            <img ng-src="{{f.user.header}}" alt="Image" class="img-responsive img-circle" />
+                        </div>
+                    </td>
+                    <td ng-bind="f.user.tname"></td>
+                    <td ng-bind="f.user.phone"></a></td>
+                    <td ng-bind="f.contact"></td>
+                    <td ng-bind="f.xxb"></td>
+                    <td ng-bind="f.content"></td>
+                    <td ng-bind="feedbackTime(f)"></td>
+                    <td><button type="button" class="btn btn-warning" ng-class="{true:'disabled', false: ''}[f.xxb]" ng-click="showRechargeWin(f.feed_id, f.user.tname, f.user.phone)">奖励</button></td>
+                </tr>
+                <tr>
+                    <td class="page-td" colspan="8">
+                        <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

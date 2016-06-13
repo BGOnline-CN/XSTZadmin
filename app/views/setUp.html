@@ -1,0 +1,58 @@
+<h3>设置中心</h3>
+<!-- START panel-->
+<div class="panel panel-default">
+   <div class="panel-heading">常规设置</div>
+   <div class="panel-body">
+      <form ng-controller="setUpCtrl" novalidate="" class="form-validate form-horizontal" >
+         <!--<fieldset>
+            <div class="form-group">
+               <label class="col-sm-2 control-label" title="无操作分钟数后自动锁定屏幕，0不锁定">自动锁屏时间</label>
+               <div class="col-sm-10">
+                  <div class="row">
+                     <div class="col-xs-6">
+                        <slider ng-change="change()" ng-model="slider1" min="0" max="30" step="1" orientation="horizontal" class="bs-slider slider-horizontal"></slider>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </fieldset>-->
+         <fieldset>
+            <div class="form-group">
+               <label class="col-sm-2 control-label" title="App启动页面广告图设置">App启动图设置</label>
+               <div class="col-sm-10">
+                  <div class="row">
+                     <div class="col-xs-4">
+                        step 1：启动图上传
+                        <input filestyle="" type="file" data-button-text="图片" data-class-button="btn btn-default" data-classinput="form-control inline" nv-file-select="" uploader="uploader" class="form-control" required=""/>
+                        <br/>
+                        step 2：启动图跳转地址
+                        <input name="url" required="" ng-model="launchUrl" placeholder="http://" class="form-control ng-pristine ng-valid-url ng-invalid ng-invalid-required ng-touched" type="url">                 
+                     </div>
+                     <div class="col-xs-1"></div>
+                     <div class="col-xs-3">
+                        step 3：开始时间<input placeholder={{startDate}} class="form-control" type="text" id="start" ng-click="showStartData()">
+                        <br/>
+                        step 4：结束时间<input placeholder={{endDate}} class="form-control" type="text" id="end" ng-click="showEndData();">
+                     </div>
+                     <div class="col-xs-4">
+                        <button type="button" class="btn btn-primary" ng-click="saveLaunch()" style="margin-top: 20px;">step 5：保存启动图</button>
+                     </div>
+                  </div>
+               </div>
+               <label class="col-sm-2 control-label"></label>
+               <div class="col-sm-10" style="margin-top: 20px;">
+                  <div class="row">
+                     <div class="col-xs-6 phone" style="margin-left: 10px;">
+                        <div class="launch-show">
+                            <img ng-src="{{img}}">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               
+            </div>
+         </fieldset>
+      </form>
+   </div>
+</div>
+<!-- END panel-->

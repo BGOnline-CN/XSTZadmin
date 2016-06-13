@@ -1,0 +1,32 @@
+[
+  {
+    "text": "Menu Heading",
+    "heading": "true",
+    "translate": "sidebar.heading.HEADER"
+  },
+  {
+    "text": "课程管理",
+    "sref": "app.courseMngt",
+    "icon": "fa fa-book",
+    "translate": "sidebar.nav.COURSEMNGT"
+  },
+  {
+    "text": "分校管理",
+    "sref": "app.atTheMngt",
+    "icon": "fa fa-cubes",
+    "translate": "sidebar.nav.ATTHEMNGT"
+  },
+  {
+    "text": "用户反馈",
+    "sref": "app.userFeedback",
+    "icon": "fa fa-comment-o",
+    "translate": "sidebar.nav.USERFEEDBACK"
+  },
+  {
+    "text": "系统配置",
+    "sref": "app.setUp",
+    "icon": "fa fa-cogs",
+    "translate": "sidebar.nav.SETUP"
+  }
+  
+]
