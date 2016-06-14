@@ -8,7 +8,6 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 
 
 // 全局
-
 var url = 'http://xiaoshutong.thinktorch.cn/backend/web'; // API
 var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
@@ -1021,6 +1020,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       
       $scope.addCourseSelectSort = function(selSort) {
           var selSortArr = selSort.split(',');
+          alert(selSortArr)
           sessionStorage.setItem('sortid', selSortArr[0]);
           sessionStorage.setItem('sname', selSortArr[1]);
       }
