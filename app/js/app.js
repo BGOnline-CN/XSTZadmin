@@ -572,7 +572,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
             }, function(x) { alert('啊噢~，服务器开小差了！'); });
       }
       
-      getCourseClass(sessionStorage.delClassNameIndex);
+      getCourseClass();
       
       nowClassName = (function(i) { // 当前的 的分类改变颜色 
           if(i) {
@@ -588,11 +588,8 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-          sessionStorage.setItem('delClassNameIndex', i);
           getCourseData(sortid);
-          
           nowClassName(i+1)
-          
           judgeClassName();
       }
       
@@ -622,7 +619,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                 .then(function(response) {
                     if ( response.data.code != 200 ) {
                         ngDialog.open({
-                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                          template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
@@ -724,11 +721,11 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       })
       
       $scope.rClassName = function() {
-          $('.class-name').html("<input class='form-control ng-touched rcName' type='text'>");
+          $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
           $('.rcName').focus();
       }
 
-      $(document).on('change', '.rcName', function() { // 修改分类名称
+      $(document).on('blur', '.rcName', function() { // 修改分类名称
           var changeSname = $(this).val();
           $http
             .post(''+url+'/sort/edit', {
@@ -737,10 +734,11 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
             .then(function(response) {
                 if ( response.data.code != 200 ) {
                     ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
+                    ngDialog.close();
                 }
                 else{ 
                     ngDialog.open({
@@ -748,10 +746,10 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                       plain: true,
                       className: 'ngdialog-theme-default'
                     });
-                    ngDialog.close();
                     $('.class-name').html(changeSname);
                     sessionStorage.setItem('sname', changeSname);
                     getCourseClass();
+                    ngDialog.close();
                 }
             }, function(x) { 
                 ngDialog.open({
@@ -759,7 +757,9 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                   plain: true,
                   className: 'ngdialog-theme-default'
                 });
+                ngDialog.close();
             });
+          
       })
       
       
@@ -788,6 +788,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                     else{ 
                         getCourseData(sortid);
@@ -797,6 +798,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                 }, function(x) { 
                   listLoading.css({'display':'none'});
@@ -805,6 +807,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     plain: true,
                     className: 'ngdialog-theme-default'
                   });
+                  ngDialog.close();
                 });
           }else {
               ngDialog.open({
@@ -812,6 +815,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
+              ngDialog.close();
           }
           
       }
@@ -835,7 +839,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                             $('.rdClassNameBtn').removeClass('open');
                         }
                         else{ 
-                            sessionStorage.setItem('sortid', undefined);
+                            sessionStorage.setItem('sortid', 0);
                             sessionStorage.setItem('sname', undefined);
                             getCourseData();
                             getCourseClass();
@@ -877,6 +881,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                           plain: true,
                           className: 'ngdialog-theme-default'
                         });
+                        ngDialog.close();
                     }
                     else{ 
                         getCourseData(sessionStorage.sortid, $scope.currentPage - 1);
@@ -888,6 +893,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     plain: true,
                     className: 'ngdialog-theme-default'
                   });
+                  ngDialog.close();
                 });
           }
       }
@@ -1020,7 +1026,6 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       
       $scope.addCourseSelectSort = function(selSort) {
           var selSortArr = selSort.split(',');
-          alert(selSortArr)
           sessionStorage.setItem('sortid', selSortArr[0]);
           sessionStorage.setItem('sname', selSortArr[1]);
       }
