@@ -52,7 +52,7 @@
                     <td ng-bind="f.xxb"></td>
                     <td ng-bind="f.content"></td>
                     <td ng-bind="feedbackTime(f)"></td>
-                    <td><button type="button" class="btn btn-warning" ng-class="{true:'disabled', false: ''}[f.xxb]" ng-click="showRechargeWin(f.feed_id, f.user.tname, f.user.phone)">奖励</button></td>
+                    <td><button type="button" class="btn btn-warning" ng-class="{true:'disabled', false: ''}[f.xxb !=0 ? true : false]" ng-click="showRechargeWin(f.feed_id, f.user.tname, f.user.phone)">奖励</button></td>
                 </tr>
                 <tr>
                     <td class="page-td" colspan="8">
