@@ -988,8 +988,8 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadCourseImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadCourseImgUrl;
       };
       
       $scope.randomDate = (new Date()).getTime();
@@ -1074,7 +1074,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                             sortid: sessionStorage.sortid,
                             summary: $scope.addCourse.abstract,
                             content: content,
-                            tcourse_img: sessionStorage.uploadImgUrl,
+                            tcourse_img: sessionStorage.uploadCourseImgUrl,
                             package: JSON.stringify(comboArr)
                         })
                         .then(function(response) {
@@ -1186,7 +1186,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         sortid: sessionStorage.sortid,
                         summary: $scope.addCourse.abstract,
                         content: content,
-                        tcourse_img: sessionStorage.uploadImgUrl ? sessionStorage.uploadImgUrl : sessionStorage.detailCourseImg,
+                        tcourse_img: sessionStorage.uploadCourseImgUrl ? sessionStorage.uploadCourseImgUrl : sessionStorage.detailCourseImg,
                         package: JSON.stringify(comboArr)
                     })
                     .then(function(response) {
@@ -1589,8 +1589,8 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
       })
 
       uploader.onSuccessItem = function(response) {
-        sessionStorage.setItem('uploadImgUrl', jQuery.parseJSON(response._xhr.response).url);
-        $scope.img = rootUrl + sessionStorage.uploadImgUrl;
+        sessionStorage.setItem('uploadAtTheImgUrl', jQuery.parseJSON(response._xhr.response).url);
+        $scope.img = rootUrl + sessionStorage.uploadAtTheImgUrl;
       };
       
       
@@ -1653,7 +1653,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                               address: $scope.addAtThe.address,
                               principal: $scope.addAtThe.principal,
                               tel: $scope.addAtThe.tel,
-                              img: sessionStorage.uploadImgUrl,
+                              img: sessionStorage.uploadAtTheImgUrl,
                               lng: $scope.addAtThe.lng_lat.split(',')[0],
                               lat: $scope.addAtThe.lng_lat.split(',')[1],
                               is_open: 1,
@@ -1807,7 +1807,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                         address: $scope.addAtThe.address,
                         principal: $scope.addAtThe.principal,
                         tel: $scope.addAtThe.tel,
-                        img: sessionStorage.detailBranchImg,
+                        img: sessionStorage.uploadAtTheImgUrl ? sessionStorage.uploadAtTheImgUrl : sessionStorage.detailBranchImg,
                         lng: $scope.addAtThe.lng_lat.split(',')[0],
                         lat: $scope.addAtThe.lng_lat.split(',')[1],
                         is_open: 1,
