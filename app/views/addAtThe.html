@@ -72,8 +72,8 @@
                             <div class="col-xs-2 customTitle">区域</div>
                             <div class="col-xs-4">
                                 <span style="vertical-align: bottom;" class="showEditAtTheArea">{{addAtThe.areaName ? '当前区域：' + addAtThe.areaName + '，修改 -->' : ''}}</span>
-                                <select class="bg-select" id="Province" ng-change="selectPCAS(selectShenfeng)" ng-model="selectShenfeng">
-                                    <option value="">----请选择省份----</option>
+                                <select class="bg-select" id="Province" ng-change="selectPCAS(selectShenfeng)" ng-model="selectShenfeng" ng-init="selectShenfeng='0'">
+                                    <option value="0">----请选择省份----</option>
                                     <option ng-repeat="x in PCAS" value="{{x.areaid}}">{{x.name}}</option>
                                 </select> 
                                 <select class="bg-select" id="City" ng-change="selectCity(selectChengshi)" ng-model="selectChengshi">

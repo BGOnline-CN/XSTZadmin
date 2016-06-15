@@ -1,6 +1,6 @@
 <h3 ng-controller="atTheCityController" class="PCAS">
-    <select class="bg-select" id="Province" ng-change="selectPCAS(selectShenfeng)" ng-model="selectShenfeng">
-        <option value="">全部</option>
+    <select class="bg-select" id="Province" ng-change="selectPCAS(selectShenfeng)" ng-model="selectShenfeng" ng-init="selectShenfeng='0'">
+        <option value="0">全部</option>
         <option ng-repeat="x in PCAS" value="{{x.areaid + ',' + x.name}}">{{x.name}}</option>
     </select> 
     <select class="bg-select" id="City" ng-change="selectCity(selectChengshi)" ng-model="selectChengshi">
