@@ -555,7 +555,7 @@ var noRefreshGetData = (function(x, speed) { // x 取得数据的函数名 speed
 var errorJump = (function($state) {
     if (!(sessionStorage.suserid && sessionStorage.token)) { 
         $state.go('page.login'); 
-        clearInterval(intervalTimer);
+        // clearInterval(intervalTimer);
     }
 });
  
