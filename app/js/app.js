@@ -577,7 +577,12 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    // requestError(response, $state, ngDialog);
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
                 }
                 else{ 
                     $rootScope.courseClass = response.data.data;
@@ -1219,7 +1224,13 @@ App.controller('atTheCityController', ['$scope', '$http', '$state', 'ngDialog',
                 provinceid: areaid
             })
             .then(function(response) {
-                if ( response.data.code != 200 ) {}
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
                 else{ 
                     $scope.PCAS = response.data.data;
                     if(areaid) {
@@ -1571,7 +1582,13 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
             })
             .then(function(response) {
 
-                if ( response.data.code != 200 ) {}
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                }
                 else{ 
                     $scope.PCAS = response.data.data;
                     parseInt(areaid) ? $('#City').css({'display':'inline-block'}) : $('#City').css({'display':'none'});
