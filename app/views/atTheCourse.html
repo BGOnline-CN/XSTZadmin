@@ -1,0 +1,36 @@
+<h3 ng-controller="atTheCourseSearchController">
+    搜索结果：
+</h3>
+<div class="clearfix" ng-controller="atTheCourseController">
+    <div class="ball-spin-fade-loader list-loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <h4 class="page-header courseTitle">
+        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '课程数量' : sname}}</span>（{{showTotalItems}}）
+    </h4>
+    <div class="row">
+        <div class="col-xs-4 col-md-2 courseList">
+            <a class="dashed" ng-click="addCourseType()">
+                <img src="app/img/add.png">
+                <p>添加自定义课程</p>
+            </a>
+        </div>
+        <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
+            <a ui-sref="app.atTheCourseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
+                <img ng-src="{{c.course_img}}">
+                <div class="courseDesc">
+                    <p ng-bind="c.course_name"></p>
+                    <small ng-bind="c.summary" title={{c.summary}}></small>
+                </div>
+            </a>
+        </div>
+    </div>
+    <pagination class="page-bg" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</div>

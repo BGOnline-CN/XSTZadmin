@@ -13,8 +13,13 @@
       "HEADER": "ThinkTorch Admin"
     },
     "nav": {
-      "COURSEMNGT": "课程管理",
+      "DEFAULT": "首页",
+      "COURSEMNGT": "课程模板",
+      "ATTHECOURSE": "课程查看",
       "ATTHEMNGT": "分校管理",
+      "ORDERLIST": "订单列表",
+      "PARENTSLIST": "家长列表",
+      "TEACHERSLIST": "教师列表",
       "USERFEEDBACK": "用户反馈",
       "SETUP": "系统配置"
     }

@@ -5,16 +5,46 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
-    "text": "课程管理",
+    "text": "首页",
+    "sref": "app.default",
+    "icon": "fa fa-home",
+    "translate": "sidebar.nav.DEFAULT"
+  },
+  {
+    "text": "课程模板",
     "sref": "app.courseMngt",
-    "icon": "fa fa-book",
+    "icon": "fa fa-crop",
     "translate": "sidebar.nav.COURSEMNGT"
+  },
+  {
+    "text": "课程查看",
+    "sref": "app.atTheCourse",
+    "icon": "fa fa-book",
+    "translate": "sidebar.nav.ATTHECOURSE"
   },
   {
     "text": "分校管理",
     "sref": "app.atTheMngt",
     "icon": "fa fa-cubes",
     "translate": "sidebar.nav.ATTHEMNGT"
+  },
+  {
+    "text": "订单列表",
+    "sref": "app.orderList",
+    "icon": "fa fa-list-alt",
+    "translate": "sidebar.nav.ORDERLIST"
+  },
+  {
+    "text": "家长列表",
+    "sref": "app.parentsList",
+    "icon": "fa fa-users",
+    "translate": "sidebar.nav.PARENTSLIST"
+  },
+  {
+    "text": "教师列表",
+    "sref": "app.teachersList",
+    "icon": "fa fa-graduation-cap",
+    "translate": "sidebar.nav.TEACHERSLIST"
   },
   {
     "text": "用户反馈",

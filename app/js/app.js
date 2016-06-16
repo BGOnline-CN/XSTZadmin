@@ -109,17 +109,40 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl', 'ui.bootstrap-slider', 'angularFileUpload', 'filestyle', 'ngDialog', 'loaders.css')
     })
+
+    .state('app.default', {
+        url: '/default',
+        title: '首页',
+        templateUrl: helper.basepath('default.html'),
+        resolve: helper.resolveFor('flot-chart','flot-chart-plugins')
+    })
+
     .state('app.courseMngt', {
         url: '/courseMngt',
-        title: '课程管理',
+        title: '课程模板',
         templateUrl: helper.basepath('courseMngt.html'),
         resolve: helper.resolveFor('spinkit')
     })
+
+    .state('app.atTheCourse', {
+        url: '/atTheCourse',
+        title: '课程查看',
+        templateUrl: helper.basepath('atTheCourse.html'),
+        resolve: helper.resolveFor('spinkit')
+    })
+
+    .state('app.atTheCourseDetails', {
+        url: '/atTheCourseDetails',
+        title: '分校课程详情',
+        templateUrl: helper.basepath('atTheCourseDetails.html')
+    })
+
     .state('app.atTheMngt', {
         url: '/atTheMngt',
         title: '分校管理',
         templateUrl: helper.basepath('atTheMngt.html')
     })
+
     .state('app.courseDetails', {
         url: '/courseDetails',
         title: '课程详情',
@@ -463,7 +486,7 @@ App.controller('LoginFormController', ['$scope', '$http', '$state', function($sc
             
             if ( response.data.code != 200 ) { $scope.authMsg = response.data.msg; }
             else{
-                $state.go('app.courseMngt');
+                $state.go('app.default');
                 if(typeof(Storage) !== "undefined") {
                     sessionStorage.setItem("suserid", response.data.data.suserid); 
                     sessionStorage.setItem("token", response.data.data.token);
@@ -559,15 +582,15 @@ var errorJump = (function($state) {
     }
 });
  
- 
+
 
 /**=========================================================
- * courseClassController
+ * monitor1Controller
  * author: BGOnline
  * version 1.0 2016-4-13
  =========================================================*/
  
-App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
+App.controller('monitor1Controller', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
   function($scope, ngDialog, $rootScope, $http, $filter, $state) {
       
       getCourseClass = function(i) {
@@ -595,7 +618,13 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                         $scope.activeSname = sessionStorage.sname;
                     }
                 }
-            }, function(x) { alert('啊噢~，服务器开小差了！'); });
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
       }
       
       getCourseClass();
@@ -638,7 +667,122 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
       $('.addCourseClassInput').change(function() { // 添加分类
           if($(this).val()) {
               var newClassName = $(this).val();
+              $http
+                .post(''+url+'/sort/add', {
+                    token: sessionStorage.token, sname: newClassName, parent_id: 1, type: 1, row: 0
+                })
+                .then(function(response) {
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{ 
+                        $('.addCourseClassInput').val("");
+                        getCourseClass();
+                        $('.addCourseClassInput').css({'display':'none'});
+                    }
+                }, function(x) { 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                });
               
+          }
+      })
+      
+      $('.addCourseClassInput').blur(function() {
+          $(this).css({'display':'none'});
+      })
+      
+      
+}]);
+
+
+
+/**=========================================================
+ * courseClassController
+ * author: BGOnline
+ * version 1.0 2016-4-13
+ =========================================================*/
+ 
+App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
+  function($scope, ngDialog, $rootScope, $http, $filter, $state) {
+      
+      getCourseClass = function(i) {
+          $http
+            .post(''+url+'/public/getsort', {
+                token: sessionStorage.token, type: 1
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                }
+                else{ 
+                    $rootScope.courseClass = response.data.data;
+                    judgeClassName();
+                    nowClassName(i);
+                    if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
+                        $('.course').eq(0).addClass('coureColor');
+                    }else {
+                        $('.course').removeClass('coureColor');
+                        $scope.activeSname = sessionStorage.sname;
+                    }
+                }
+            }, function(x) { 
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+      getCourseClass();
+      
+      nowClassName = (function(i) { // 当前的 的分类改变颜色 
+          if(i) {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(i).addClass('coureColor');
+          }else {
+            $('.course').removeClass('coureColor');
+            $('.course').eq(0).addClass('coureColor');
+          }
+      });
+      
+      $scope.showCourse = function(sortid, sname, i) { // 展示 现在所在的 分类
+          
+          sessionStorage.setItem('sname', sname);
+          sessionStorage.setItem('sortid', sortid);
+          $('.class-name').html(sname);
+          getCourseData(sortid);
+          nowClassName(i+1)
+          judgeClassName();
+      }
+      
+      var judgeClassName = function() { // 判断当前 是否在全部课程下
+          if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) {
+              $('.rdClassNameBtn').css({'display':'none'});
+          }else {
+              $('.rdClassNameBtn').css({'display':'inline-block'});
+          }
+      };
+      
+      judgeClassName();
+      
+      $scope.addCourseClass = function() {
+          $('.addCourseClassInput').css({'display':'inline-block'});
+          $('.addCourseClassInput').focus();
+      }
+      
+      $('.addCourseClassInput').change(function() { // 添加分类
+          if($(this).val()) {
+              var newClassName = $(this).val();
               $http
                 .post(''+url+'/sort/add', {
                     token: sessionStorage.token, sname: newClassName, parent_id: 1, type: 1, row: 0
@@ -914,6 +1058,82 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
 
 
 /**=========================================================
+ * atTheCourseSearchController
+ * author: BGOnline
+ * version 1.0 2016-6-16
+ =========================================================*/
+ 
+App.controller('atTheCourseSearchController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      // timeoutLock($state);
+}]);
+
+
+
+/**=========================================================
+ * atTheCourseController
+ * author: BGOnline
+ * version 1.0 2016-6-16
+ =========================================================*/
+ 
+App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
+  function($scope, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      
+      getAtTheCourseData = function(cp, s, bn) { // 获取课程
+
+          cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
+
+          listLoading.css({'display':'block'});
+          $scope.sname = sessionStorage.sname;
+          $http
+            .post(''+url+'/list/course', {
+                token: sessionStorage.token, p: cp, search: s, branch_name: bn
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.course = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getAtTheCourseData();
+      
+      $scope.pageChanged = function() {
+          getAtTheCourseData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+      
+      
+      $scope.showCDetails = function(course_name, courseid, sname) {
+          sessionStorage.setItem('course_name', course_name);
+          sessionStorage.setItem('courseid', courseid);
+          sessionStorage.setItem('sname', sname);
+      }
+      
+      // timeoutLock($state);
+}]);
+
+
+
+/**=========================================================
  * courseDetailsController
  * author: BGOnline
  * version 1.0 2016-3-18
@@ -966,6 +1186,55 @@ App.controller('courseDetailsController', ['$scope', '$sce', '$rootScope', '$htt
       
       //timeoutLock($state);
 }]);
+
+
+/**=========================================================
+ * atTheCourseDetailsController
+ * author: BGOnline
+ * version 1.0 2016-6-16
+ =========================================================*/
+App.controller('atTheCourseDetailsController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      $scope.course_name = sessionStorage.course_name;
+      $scope.sname = sessionStorage.sname;
+      var getAtTheCourseDetailsData = function() {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/course_one', {
+                token: sessionStorage.token, courseid: sessionStorage.courseid
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.courseDetailsData = response.data.data; 
+                    $scope.summary = $scope.courseDetailsData.summary;
+                    $scope.content = $sce.trustAsHtml($scope.courseDetailsData.content);
+                    $scope.packages = $scope.courseDetailsData.packages;
+                    $scope.course_img = rootUrl + $scope.courseDetailsData.course_img;
+                    sessionStorage.setItem('sortid', $scope.courseDetailsData.sortid);
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getAtTheCourseDetailsData();
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
 
 
 /**=========================================================
@@ -1036,7 +1305,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
           case "1": // 添加
               ifrCon = undefined;
               $scope.addSubmit = function() {
-                
+                  $('.btn').addClass('disabled');
                   var packageRow = $('.packageRow');
                   var comboInput = $('.comboInput');
                   
@@ -1076,6 +1345,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                             package: JSON.stringify(comboArr)
                         })
                         .then(function(response) {
+                            $('.btn').removeClass('disabled');
                             listLoading.css({'display':'none'});
                             if ( response.data.code != 200 ) {
                                 requestError(response, $state, ngDialog);
@@ -1090,6 +1360,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                                 getCourseClass();
                             }
                         }, function(x) { 
+                          $('.btn').removeClass('disabled');
                           listLoading.css({'display':'none'});
                           ngDialog.open({
                             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
@@ -1136,7 +1407,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                 });
               
               $scope.addSubmit = function() {
-                  
+                  $('.btn').addClass('disabled');
                   var packageRow = $('.packageRow');
                   var comboInput = $('.comboInput');
                   var comboArr = new Array();
@@ -1178,6 +1449,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                         package: JSON.stringify(comboArr)
                     })
                     .then(function(response) {
+                        $('.btn').removeClass('disabled');
                         listLoading.css({'display':'none'});
                         if ( response.data.code != 200 ) {
                             requestError(response, $state, ngDialog);
@@ -1191,6 +1463,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
                             $state.go('app.courseMngt');
                         }
                     }, function(x) { 
+                      $('.btn').removeClass('disabled');
                       listLoading.css({'display':'none'});
                       ngDialog.open({
                         template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
@@ -1621,7 +1894,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
       switch(sessionStorage.actionAtTheType) {
           
           case "1": // 添加
-          
+              
               $scope.titleOfNewOrEdit = '新增分校管理员';
               $scope.pwdOfNewOrEdit = '密码';
               $('.courseTitle').text('添加分校');
@@ -1633,6 +1906,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                         className: 'ngdialog-theme-default'
                       });
                   }else {
+                      $('.btn').addClass('disabled');
                       $http
                         .post(''+url+'/branch/add', {
                               token: sessionStorage.token, 
@@ -1649,6 +1923,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                               is_top: 1
                           })
                           .then(function(response) {
+                              $('.btn').removeClass('disabled');
                               if ( response.data.code != 200 ) {
                                   requestError(response, $state, ngDialog);
                               }else{ 
@@ -1671,6 +1946,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                                   }
                               }
                           }, function(x) {
+                            $('.btn').removeClass('disabled');
                             ngDialog.open({
                               template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                               plain: true,
@@ -1685,6 +1961,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                $scope.saveManager = function() {
                   
                   if($scope.branchid) {
+                    $('.btn').addClass('disabled');
                     $http
                     .post(''+url+'/manager/add', {
                         token: sessionStorage.token, 
@@ -1694,6 +1971,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                         password: $scope.addAtThe.password
                     })
                     .then(function(response) {
+                        $('.btn').removeClass('disabled');
                         if ( response.data.code != 200 ) {
                             requestError(response, $state, ngDialog);
                         }
@@ -1706,6 +1984,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                             $state.go('app.atTheMngt');
                         }
                     }, function(x) {
+                      $('.btn').removeClass('disabled');
                       ngDialog.open({
                         template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                         plain: true,
@@ -1773,6 +2052,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                 });
               
               $scope.addSubmit = function() {
+                  $('.btn').addClass('disabled');
                   $http
                     .post(''+url+'/branch/edit', {
                         token: sessionStorage.token, 
@@ -1790,6 +2070,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                         is_top: 1
                     })
                     .then(function(response) {
+                        $('.btn').removeClass('disabled');
                         if ( response.data.code != 200 ) {
                             requestError(response, $state, ngDialog);
                         }
@@ -1802,6 +2083,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                             $state.go('app.atTheMngt');
                         }
                     }, function(x) {
+                      $('.btn').removeClass('disabled');
                       ngDialog.open({
                         template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                         plain: true,
@@ -1812,7 +2094,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
               };
               
               $scope.saveManager = function() {
-                  
+                  $('.btn').addClass('disabled');
                   switch(isEidtOrAdd) {
                       case 0:
                           $http
@@ -1824,6 +2106,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                               password: $scope.addAtThe.password
                           })
                           .then(function(response) {
+                              $('.btn').addClass('disabled');
                               if ( response.data.code != 200 ) {
                                   requestError(response, $state, ngDialog);
                               }
@@ -1836,6 +2119,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                                   $state.go('app.atTheMngt');
                               }
                           }, function(x) {
+                            $('.btn').addClass('disabled');
                             ngDialog.open({
                               template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                               plain: true,
@@ -1851,6 +2135,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                               password: $scope.addAtThe.password
                           })
                           .then(function(response) {
+                              $('.btn').addClass('disabled');
                               if ( response.data.code != 200 ) {
                                   requestError(response, $state, ngDialog);
                               }
@@ -1863,6 +2148,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                                   $state.go('app.atTheMngt');
                               }
                           }, function(x) {
+                            $('.btn').addClass('disabled');
                             ngDialog.open({
                               template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                               plain: true,
@@ -3937,11 +4223,13 @@ App.controller('rewardXXBController', ['$scope', '$state', '$http', 'ngDialog',
       $scope.rechargeXXB = function(fid) {
           var xxbNum = $('.xxb-input').val();
           if(xxbNum) {
+            $('.btn').addClass('disabled');
             $http
             .post(''+url+'/feedback/awardxxb', {
                 token: sessionStorage.token, feed_id: fid, xxb: xxbNum
             })
             .then(function(response) {
+                $('.btn').removeClass('disabled');
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
                 }else{ 
@@ -3954,6 +4242,7 @@ App.controller('rewardXXBController', ['$scope', '$state', '$http', 'ngDialog',
                     ngDialog.close();
                 }
             }, function(x) {
+              $('.btn').removeClass('disabled');
               ngDialog.open({
                 template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                 plain: true,
@@ -4040,7 +4329,11 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
               $scope.img = rootUrl + response.data.data.img;
           }
       }, function(x) {
-          $scope.authMsg = '朋友，服务器挂掉了！';
+          ngDialog.open({
+            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+            plain: true,
+            className: 'ngdialog-theme-default'
+          });
       })
     
     var uploader = $scope.uploader = new FileUploader({
@@ -4055,6 +4348,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     $scope.saveLaunch = function() {
       
       if(sessionStorage.launchStartDatas != undefined || sessionStorage.launchStartDatas != 'undefined') {
+            $('.btn').addClass('disabled');
             $http.post(''+url+'/setting/launchimage_add', {
                 token: sessionStorage.token, 
                 name: '启动图',
@@ -4063,6 +4357,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
                 img: sessionStorage.uploadLaunchUrl,
                 link: $scope.launchUrl
               }).then(function(response) {
+                  $('.btn').removeClass('disabled');
                   if(response.data.code != 200) {
                       requestError(response, $state, ngDialog);
                   }else { 
@@ -4073,7 +4368,12 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
                       });
                   }
               }, function(x) {
-                  $scope.authMsg = '朋友，服务器挂掉了！';
+                  $('.btn').removeClass('disabled');
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
               })
         }else {
             ngDialog.open({
