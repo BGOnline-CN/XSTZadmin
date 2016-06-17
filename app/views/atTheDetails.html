@@ -12,6 +12,92 @@
         <div></div>
         <div></div>
     </div>
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <!-- START widget-->
+            <div class="panel widget bg-primary">
+                <div class="row row-table bg-count">
+                    <div class="col-xs-4 text-center bg-primary-dark pv-lg">
+                    <em class="fa fa-graduation-cap fa-3x"></em>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <div class="h2 mt0">{{count.user_teacher_count}}
+                        <small style="font-size: 12px">人</small>
+                    </div>
+                    <div class="text-uppercase">教师数量</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <!-- START widget-->
+            <div class="panel widget bg-purple">
+                <div class="row row-table bg-count">
+                    <div class="col-xs-4 text-center bg-purple-dark pv-lg">
+                    <em class="icon-users fa-3x"></em>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <div class="h2 mt0">{{count.user_parent_count}}
+                        <small style="font-size: 12px">人</small>
+                    </div>
+                    <div class="text-uppercase">家长数量</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- START widget-->
+            <div class="panel widget bg-green">
+                <div class="row row-table bg-count">
+                    <div class="col-xs-4 text-center bg-green-dark pv-lg">
+                    <em class="fa fa-child fa-4x"></em>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <div class="h2 mt0">{{count.student_count}}
+                        <small style="font-size: 12px">人</small>
+                    </div>
+                    <div class="text-uppercase">学生数量</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- START widget-->
+            <div class="panel widget bg-info">
+                <div class="row row-table bg-count">
+                    <div class="col-xs-4 text-center bg-info-dark pv-lg">
+                    <em class="icon-basket-loaded fa-3x"></em>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <div class="h2 mt0" style="display: inline-block;">{{count.course_order_count}}
+                        <small style="font-size: 12px">笔</small>
+                    </div>
+                    <div class="h2 mt0" style="display: inline-block;">{{count.course_order_total_price}}
+                        <small style="font-size: 12px">元</small>
+                    </div>
+                    <div class="text-uppercase">运营状况</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="panel widget">
+                <div class="row row-table">
+                    <div class="col-xs-4 text-center bg-green pv-lg">
+                    <now format="MMMM" class="text-sm"></now>
+                    <br/>
+                    <now format="d" class="h2 mt0"></now>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <now format="EEEE" class="text-uppercase"></now>
+                    <br/>
+                    <now format="h:mm" class="h2 mt0"></now>
+                    <now format="a" class="text-muted text-sm"></now>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div>
     <h4 class="page-header courseTitle">
         {{addAtThe.areaName}}&nbsp;>&nbsp;{{atTheName}}
         <div class="operationCourse">
@@ -20,6 +106,7 @@
             </div> 
         </div>
     </h4>
+    
     <div class="courseDetails-div atTheDetails-div">
         <tabset>
             <tab heading="分校详情">

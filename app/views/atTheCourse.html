@@ -1,5 +1,11 @@
 <h3 ng-controller="atTheCourseSearchController">
-    搜索结果：
+    搜索结果：{{searchResult ? searchResult : '全部'}}
+    <div class="input-group" style="width: 200px;float:right;">
+        <input type="text" placeholder="" class="input-sm form-control" ng-model="sRLValue"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-sm btn-default" ng-click="searchAtTheCourse()">搜索</button>
+        </span>
+    </div>
 </h3>
 <div class="clearfix" ng-controller="atTheCourseController">
     <div class="ball-spin-fade-loader list-loading">
@@ -16,14 +22,18 @@
         <span class="class-name">{{sname == 'undefined' || sname == undefined ? '课程数量' : sname}}</span>（{{showTotalItems}}）
     </h4>
     <div class="row">
-        <div class="col-xs-4 col-md-2 courseList">
-            <a class="dashed" ng-click="addCourseType()">
-                <img src="app/img/add.png">
-                <p>添加自定义课程</p>
+        <div class="col-xs-4 col-md-2 courseList ZHCourseList">
+            <a href="javascript:void(0)" class="dashed">
+                <p style="color:#555">分校课程</p>
+                <p>以下展示的是所有分<br>校的课程</p>
+                <p class="ZHimg"></p>
             </a>
         </div>
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in course" ng-mouseleave="closeCourseAct($index)">
-            <a ui-sref="app.atTheCourseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname)" ng-mouseover="showCourseAct($index)">
+            <p class="courseAction" style="visibility: visible;text-align:center;">
+                <small ng-bind="c.branch_name" style="color:#aaa;"></small>
+            </p>
+            <a ui-sref="app.atTheCourseDetails" ng-click="showCDetails(c.course_name,c.courseid,c.sname,c.branch_name)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{c.course_img}}">
                 <div class="courseDesc">
                     <p ng-bind="c.course_name"></p>

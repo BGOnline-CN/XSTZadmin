@@ -11579,3 +11579,19 @@ flatdoc .button .badge {
 .laydate_body .laydate_y .laydate_yms ul li {
   width: 59px !important;
 }
+.ZHCourseList > a.dashed {
+  cursor: default;
+  padding: 50px 0;
+  background-color: #fff;
+  border: 1px solid #DADADA;
+}
+.ZHCourseList > a.dashed > p.ZHimg {
+  height:16px;
+  width:50px;
+  background:url('../img/ZH.png') no-repeat;
+  background-size: 100% 100%;
+  margin: 0 auto;
+}
+.bg-count {
+  cursor: pointer;
+}

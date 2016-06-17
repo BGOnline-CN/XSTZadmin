@@ -143,6 +143,25 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('atTheMngt.html')
     })
 
+    .state('app.orderList', {
+        url: '/orderList',
+        title: '订单列表',
+        templateUrl: helper.basepath('orderList.html')
+    })
+
+    .state('app.usersList', {
+        url: '/usersList',
+        title: '家长列表',
+        templateUrl: helper.basepath('usersList.html')
+    })
+
+    .state('app.teachersList', {
+        url: '/teachersList',
+        title: '教师列表',
+        templateUrl: helper.basepath('teachersList.html')
+    })
+
+
     .state('app.courseDetails', {
         url: '/courseDetails',
         title: '课程详情',
@@ -163,7 +182,8 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     .state('app.atTheDetails', {
         url: '/atTheDetails',
         title: '分校详情',
-        templateUrl: helper.basepath('atTheDetails.html')
+        templateUrl: helper.basepath('atTheDetails.html'),
+        resolve: helper.resolveFor('flot-chart','flot-chart-plugins')
     })
     
     .state('app.userFeedback', {
@@ -585,117 +605,42 @@ var errorJump = (function($state) {
 
 
 /**=========================================================
- * monitor1Controller
+ * defaultController
  * author: BGOnline
  * version 1.0 2016-4-13
  =========================================================*/
  
-App.controller('monitor1Controller', ['$scope', 'ngDialog', '$rootScope', '$http', '$filter', '$state',
-  function($scope, ngDialog, $rootScope, $http, $filter, $state) {
+App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
       
-      getCourseClass = function(i) {
+      errorJump($state);
+
+      var getCountData = function() {
           $http
-            .post(''+url+'/public/getsort', {
-                token: sessionStorage.token, type: 1
+            .post(''+url+'/site/index', {
+                token: sessionStorage.token
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                    ngDialog.close();
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
-                    $rootScope.courseClass = response.data.data;
-                    judgeClassName();
-                    nowClassName(i);
-                    if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
-                        $('.course').eq(0).addClass('coureColor');
-                    }else {
-                        $('.course').removeClass('coureColor');
-                        $scope.activeSname = sessionStorage.sname;
-                    }
+                    $scope.countData = response.data.data;
                 }
             }, function(x) { 
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                });
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
             });
-      }
-      
-      getCourseClass();
-      
-      nowClassName = (function(i) { // 当前的 的分类改变颜色 
-          if(i) {
-            $('.course').removeClass('coureColor');
-            $('.course').eq(i).addClass('coureColor');
-          }else {
-            $('.course').removeClass('coureColor');
-            $('.course').eq(0).addClass('coureColor');
-          }
-      });
-      
-      $scope.showCourse = function(sortid, sname, i) { // 展示 现在所在的 分类
-          
-          sessionStorage.setItem('sname', sname);
-          sessionStorage.setItem('sortid', sortid);
-          $('.class-name').html(sname);
-          getCourseData(sortid);
-          nowClassName(i+1)
-          judgeClassName();
-      }
-      
-      var judgeClassName = function() { // 判断当前 是否在全部课程下
-          if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) {
-              $('.rdClassNameBtn').css({'display':'none'});
-          }else {
-              $('.rdClassNameBtn').css({'display':'inline-block'});
-          }
       };
       
-      judgeClassName();
+      getCountData();
+
+      // noRefreshGetData(getUserData, getDataSpeed);
       
-      $scope.addCourseClass = function() {
-          $('.addCourseClassInput').css({'display':'inline-block'});
-          $('.addCourseClassInput').focus();
-      }
-      
-      $('.addCourseClassInput').change(function() { // 添加分类
-          if($(this).val()) {
-              var newClassName = $(this).val();
-              $http
-                .post(''+url+'/sort/add', {
-                    token: sessionStorage.token, sname: newClassName, parent_id: 1, type: 1, row: 0
-                })
-                .then(function(response) {
-                    if ( response.data.code != 200 ) {
-                        requestError(response, $state, ngDialog);
-                    }
-                    else{ 
-                        $('.addCourseClassInput').val("");
-                        getCourseClass();
-                        $('.addCourseClassInput').css({'display':'none'});
-                    }
-                }, function(x) { 
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
-                });
-              
-          }
-      })
-      
-      $('.addCourseClassInput').blur(function() {
-          $(this).css({'display':'none'});
-      })
-      
-      
+      //timeoutLock($state);
 }]);
 
 
@@ -1065,7 +1010,11 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
  
 App.controller('atTheCourseSearchController', ['$scope', '$rootScope', '$http', '$filter', '$state','ngDialog',
   function($scope, $rootScope, $http, $filter, $state, ngDialog) {
-      
+
+      $scope.searchAtTheCourse = function() {
+          $scope.searchResult = $scope.sRLValue;
+          getAtTheCourseData('', $scope.sRLValue);
+      }
       // timeoutLock($state);
 }]);
 
@@ -1122,13 +1071,242 @@ App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filt
       $scope.maxSize = 5; // 最多显示5页
       
       
-      $scope.showCDetails = function(course_name, courseid, sname) {
+      $scope.showCDetails = function(course_name, courseid, sname, branch_name) {
           sessionStorage.setItem('course_name', course_name);
           sessionStorage.setItem('courseid', courseid);
           sessionStorage.setItem('sname', sname);
+          sessionStorage.setItem('branch_name', branch_name);
       }
       
       // timeoutLock($state);
+}]);
+
+
+
+/**=========================================================
+ * orderListController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      var getOrderListData = function(cp, se, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/course_order', {
+                token: sessionStorage.token, p: cp, search: se, time: t, state: st
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.orderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.orderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getOrderListData();
+
+      $scope.pageChanged = function() {
+          getOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.types = [
+          {value: 0, class: 'label-default', text: '已取消'},
+          {value: 1, class: 'label-danger', text: '未支付'},
+          {value: 2, class: 'label-success', text: '已完成'}
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+
+
+
+/**=========================================================
+ * usersListController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      var getUsersListData = function(cp, s) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/user', {
+                token: sessionStorage.token, p: cp, search: s, type: 1
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.usersData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.usersData.length > 0 ? $scope.UNullType = 'isNullTypeHidden' : $scope.UNullType = 'isNullTypeShow';
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getUsersListData();
+
+      $scope.pageChanged = function() {
+          getUsersListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.createTime = function(user) {
+          return localData = new Date(parseInt(user.create) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.lastLoginTime = function(user) {
+          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+
+
+
+/**=========================================================
+ * teachersListController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+
+      var getTeachersListData = function(cp, s) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/list/user', {
+                token: sessionStorage.token, p: cp, search: s, type: 2
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.teacherData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.teacherData.length > 0 ? $scope.TNullType = 'isNullTypeHidden' : $scope.TNullType = 'isNullTypeShow';
+                }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getTeachersListData();
+
+      $scope.pageChanged = function() {
+          getTeachersListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.createTime = function(user) {
+          return localData = new Date(parseInt(user.create) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.lastLoginTime = function(user) {
+          return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+      
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
 }]);
 
 
@@ -1200,6 +1378,7 @@ App.controller('atTheCourseDetailsController', ['$scope', '$sce', '$rootScope', 
       var listLoading = $('.list-loading');
       $scope.course_name = sessionStorage.course_name;
       $scope.sname = sessionStorage.sname;
+      $scope.branch_name = sessionStorage.branch_name;
       var getAtTheCourseDetailsData = function() {
           listLoading.css({'display':'block'});
           $http
@@ -1802,7 +1981,7 @@ App.controller('atTheDetailsController', ['$scope', '$rootScope', '$http', '$fil
                     $scope.addAtThe.areaName = $scope.atTheDetailsData.area_name[0] + $scope.atTheDetailsData.area_name[1];
                     $scope.addAtThe.is_open = 1,
                     $scope.addAtThe.is_top = 1
-                    
+                    $scope.count = $scope.atTheDetailsData.count;
                     sessionStorage.setItem('area', $scope.atTheDetailsData.area); // 保存区域信息 供修改分校使用
                     sessionStorage.setItem('FCSuserid',$scope.atTheDetailsData.user.suserid); // 保存分校管理员suserid 供修改分校管理员时使用
                 }

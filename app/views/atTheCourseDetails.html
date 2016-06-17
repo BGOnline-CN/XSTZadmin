@@ -1,5 +1,5 @@
-<h3 ng-controller="atTheCourseDetailsController">
-    
+<h3>
+    <a ui-sref="app.atTheCourse">返回上一页</a>
 </h3>
 <div class="clearfix" ng-controller="atTheCourseDetailsController">
     <div class="ball-spin-fade-loader list-loading">
@@ -13,7 +13,7 @@
         <div></div>
     </div>
     <h4 class="page-header courseTitle">
-        {{sname == 'undefined' || sname == undefined ? '全部课程' : sname}} > {{tcourse_name}}
+        {{branch_name}} > {{course_name}}
     </h4>
     <div class="courseDetails-div atTheDetails-div">
         <tabset>

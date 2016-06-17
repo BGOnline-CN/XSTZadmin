@@ -1,8 +1,8 @@
-<h3>订单列表</h3>
+<h3>家长列表</h3>
 <h4 class="page-header courseTitle">
-    以下展示所有订单列表
+    以下展示所有家长列表
 </h4>
-<div class="panel panel-default" ng-controller="orderListController">
+<div class="panel panel-default" ng-controller="usersListController">
     <div class="ball-spin-fade-loader list-loading">
         <div></div>
         <div></div>
@@ -40,32 +40,40 @@
         <table id="table-ext-1" class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th style="width:15%;">订单号</th>
-                    <th style="width:15%;">购买人</th>
+                    <th style="width:6%;">头像</th>
+                    <th style="width:6%;">性别</th>
                     <th style="width:10%;">电话</th>
-                    <th style="width:15%;">学生</th>
-                    <th style="width:5%;">价格</th>
-                    <th style="width:20%;">支付方式</th>
-                    <th style="width:15%;">下单时间</th>
-                    <th style="width:5%;">状态</th>
+                    <th style="width:8%;">学习币</th>
+                    <th style="width:10%;">孩子</th>
+                    <th style="width:15%;">所属分校</th>
+                    <th style="width:15%;">签名</th>
+                    <th style="width:15%;">创建时间</th>
+                    <th style="width:15%;">最近登录</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td ng-class="ONullType" colspan="8">暂无数据</td>
+                    <td ng-class="UNullType" colspan="9">暂无数据</td>
                 </tr>
-                <tr ng-repeat="o in orderData">
-                    <td ng-bind="o.orderid"></td>
-                    <td ng-bind="o.usertname"></td>
-                    <td ng-bind="o.phone"></td>
-                    <td ng-bind="o.student_tname"></td>
-                    <td ng-bind="o.total_price"></td>
-                    <td ng-bind='"人民币￥"+o.price+"，学习币："+o.xxb'></td>
-                    <td ng-bind="payTime(o)"></td>
-                    <td><div class="label" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
+                <tr ng-repeat="u in usersData">
+                    <td>
+                        <div class="media">
+                            <img ng-src="{{u.header}}" alt="Image" class="img-responsive img-circle" />
+                        </div>
+                    </td>
+                    <td ng-bind="showSex(u)"></td>
+                    <td ng-bind="u.phone"></a></td>
+                    <td ng-bind="u.xxb"></td>
+                    <td style="word-break: break-all;">
+                        <span ng-repeat="s in u.student" style="margin-right: 5px;">{{s.tname}}</span>
+                    </td>
+                    <td ng-bind="u.branch_name"></td>
+                    <td ng-bind="u.summary"></td>
+                    <td ng-bind="createTime(u)"></td>
+                    <td ng-bind="lastLoginTime(u)"></td>
                 </tr>
                 <tr>
-                    <td class="page-td" colspan="8">
+                    <td class="page-td" colspan="9">
                         <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                     </td>
                 </tr>

@@ -5,7 +5,7 @@
     "translate": "sidebar.heading.HEADER"
   },
   {
-    "text": "首页",
+    "text": "欢迎中心",
     "sref": "app.default",
     "icon": "fa fa-home",
     "translate": "sidebar.nav.DEFAULT"
@@ -36,9 +36,9 @@
   },
   {
     "text": "家长列表",
-    "sref": "app.parentsList",
+    "sref": "app.usersList",
     "icon": "fa fa-users",
-    "translate": "sidebar.nav.PARENTSLIST"
+    "translate": "sidebar.nav.USERSLIST"
   },
   {
     "text": "教师列表",
