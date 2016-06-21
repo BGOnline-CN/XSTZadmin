@@ -15,16 +15,17 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-         <div class="col-lg-2">
-            <!--<div class="input-group">
-               <input type="text" placeholder="" class="input-sm form-control" />
-               <span class="input-group-btn">
-                  <button type="button" class="btn btn-sm btn-default">搜索</button>
-               </span>
-            </div>-->
+         <div class="col-lg-4">
+            当前校区：<a href="" class="crumbs" name="{{crumbsBranchid}}">{{userBranchName ? userBranchName : '全部校区'}}</a><i class="fa fa-close removeBranchid"></i>
          </div>
-         <div class="col-lg-8"></div>
-         <div class="col-lg-2">
+         <div class="col-lg-4"></div>
+         <div class="col-lg-4">
+             <div class="input-group" style="width: 200px;float:right;">
+                <input type="text" placeholder="{{searchResult != undefined && searchResult != 'undefined' && searchResult ? searchResult : '全部'}}" class="input-sm form-control" ng-model="sULValue"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-sm btn-default" ng-click="searchListData()">搜索</button>
+                </span>
+            </div>
             <!--<div class="input-group pull-right">
                <select class="input-sm form-control">
                   <option value="3">输出到表格</option>
@@ -67,7 +68,7 @@
                     <td style="word-break: break-all;">
                         <span ng-repeat="s in u.student" style="margin-right: 5px;">{{s.tname}}</span>
                     </td>
-                    <td ng-bind="u.branch_name"></td>
+                    <td ng-bind="u.name"></td>
                     <td ng-bind="u.summary"></td>
                     <td ng-bind="createTime(u)"></td>
                     <td ng-bind="lastLoginTime(u)"></td>

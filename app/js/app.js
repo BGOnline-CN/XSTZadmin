@@ -1094,12 +1094,18 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
       
       errorJump($state);
       var listLoading = $('.list-loading');
-
-      var getOrderListData = function(cp, se, t, st) {
+      $scope.orderBranchName = sessionStorage.orderBranchName;
+      $scope.crumbsBranchid = sessionStorage.orderBranchid;
+      var getOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
           $http
             .post(''+url+'/list/course_order', {
-                token: sessionStorage.token, p: cp, search: se, time: t, state: st
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.sOLValue != undefined && sessionStorage.sOLValue != 'undefined' ? sessionStorage.sOLValue : '', 
+                time: t, 
+                status: sessionStorage.orderState, 
+                branch_name: sessionStorage.orderBranchName
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1112,7 +1118,12 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
                     $scope.showTotalItems = page.totalCount;
                     $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
                     $scope.orderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
-                }
+                    if($scope.orderBranchName) {
+                        $('.removeBranchid').css({'visibility':'visible'})
+                    }else {
+                        $('.removeBranchid').css({'visibility':'hidden'})
+                    }
+              }
             }, function(x) { 
               listLoading.css({'display':'none'});
               ngDialog.open({
@@ -1149,7 +1160,7 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 1, class: 'label-danger', text: '未支付'},
+          {value: 1, class: 'label-danger', text: '待支付'},
           {value: 2, class: 'label-success', text: '已完成'}
       ];
       
@@ -1166,6 +1177,48 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
           }
           return selected.length ? selected[0].text : 'Not set';
       };
+
+      $('.crumbs').click(function() {
+        	if($scope.crumbsBranchid) {
+              sessionStorage.setItem('atTheBranchid', $scope.crumbsBranchid);
+              $state.go('app.atTheDetails');
+          }else {
+              $state.go('app.atTheMngt');
+          }
+      })
+
+      $('.removeBranchid').click(function() {
+          sessionStorage.removeItem('atTheBranchid');
+          sessionStorage.removeItem('orderBranchName');
+          getOrderListData();
+          $scope.orderBranchName = sessionStorage.orderBranchName;
+          $scope.crumbsBranchid = sessionStorage.atTheBranchid;
+      })
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.orderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('orderState', value);
+          sessionStorage.setItem('orderText', text);
+          getOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
@@ -1185,12 +1238,13 @@ App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', 
       
       errorJump($state);
       var listLoading = $('.list-loading');
-
-      var getUsersListData = function(cp, s) {
+      $scope.userBranchName = sessionStorage.userBranchName;
+      $scope.crumbsBranchid = sessionStorage.userBranchid;
+      var getUsersListData = function(cp) {
           listLoading.css({'display':'block'});
           $http
             .post(''+url+'/list/user', {
-                token: sessionStorage.token, p: cp, search: s, type: 1
+                token: sessionStorage.token, p: cp, search: sessionStorage.sULValue != undefined && sessionStorage.sULValue != 'undefined' ? sessionStorage.sULValue : '', type: 1, branch_name: sessionStorage.userBranchName
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1203,7 +1257,12 @@ App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', 
                     $scope.showTotalItems = page.totalCount;
                     $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
                     $scope.usersData.length > 0 ? $scope.UNullType = 'isNullTypeHidden' : $scope.UNullType = 'isNullTypeShow';
-                }
+                    if($scope.userBranchName) {
+                        $('.removeBranchid').css({'visibility':'visible'})
+                    }else {
+                        $('.removeBranchid').css({'visibility':'hidden'})
+                    }  
+              }
             }, function(x) { 
               listLoading.css({'display':'none'});
               ngDialog.open({
@@ -1241,6 +1300,31 @@ App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', 
       $scope.lastLoginTime = function(user) {
           return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
+
+      $('.crumbs').click(function() {
+        	if($scope.crumbsBranchid) {
+              sessionStorage.setItem('atTheBranchid', $scope.crumbsBranchid);
+              $state.go('app.atTheDetails');
+          }else {
+              $state.go('app.atTheMngt');
+          }
+      })
+
+      $('.removeBranchid').click(function() {
+          sessionStorage.removeItem('atTheBranchid');
+          sessionStorage.removeItem('userBranchName');
+          getUsersListData();
+          $scope.userBranchName = sessionStorage.userBranchName;
+          $scope.crumbsBranchid = sessionStorage.atTheBranchid;
+      })
+
+      $scope.searchResult = sessionStorage.sULValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sULValue', $scope.sULValue);
+          $scope.searchResult = $scope.sULValue;
+          getUsersListData();
+      }
+
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
@@ -1260,12 +1344,13 @@ App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http
       
       errorJump($state);
       var listLoading = $('.list-loading');
-
-      var getTeachersListData = function(cp, s) {
+      $scope.teacherBranchName = sessionStorage.teacherBranchName;
+      $scope.crumbsBranchid = sessionStorage.teacherBranchid;
+      var getTeachersListData = function(cp) {
           listLoading.css({'display':'block'});
           $http
             .post(''+url+'/list/user', {
-                token: sessionStorage.token, p: cp, search: s, type: 2
+                token: sessionStorage.token, p: cp, search: sessionStorage.sTLValue != undefined && sessionStorage.sTLValue != 'undefined' ? sessionStorage.sTLValue : '', type: 2, branch_name: sessionStorage.teacherBranchName
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1278,7 +1363,12 @@ App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http
                     $scope.showTotalItems = page.totalCount;
                     $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
                     $scope.teacherData.length > 0 ? $scope.TNullType = 'isNullTypeHidden' : $scope.TNullType = 'isNullTypeShow';
-                }
+                    if($scope.teacherBranchName) {
+                        $('.removeBranchid').css({'visibility':'visible'})
+                    }else {
+                        $('.removeBranchid').css({'visibility':'hidden'})
+                    }
+              }
             }, function(x) { 
               listLoading.css({'display':'none'});
               ngDialog.open({
@@ -1304,6 +1394,31 @@ App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http
           return localData = new Date(parseInt(user.logintime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
       
+
+      $('.crumbs').click(function() {
+        	if($scope.crumbsBranchid) {
+              sessionStorage.setItem('atTheBranchid', $scope.crumbsBranchid);
+              $state.go('app.atTheDetails');
+          }else {
+              $state.go('app.atTheMngt');
+          }
+      })
+
+      $('.removeBranchid').click(function() {
+          sessionStorage.removeItem('atTheBranchid');
+          sessionStorage.removeItem('teacherBranchName');
+          getTeachersListData();
+          $scope.teacherBranchName = sessionStorage.teacherBranchName;
+          $scope.crumbsBranchid = sessionStorage.atTheBranchid;
+      })
+
+      $scope.searchResult = sessionStorage.sTLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sTLValue', $scope.sTLValue);
+          $scope.searchResult = $scope.sTLValue;
+          getTeachersListData();
+      }
+
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
@@ -2002,6 +2117,27 @@ App.controller('atTheDetailsController', ['$scope', '$rootScope', '$http', '$fil
           sessionStorage.setItem('actionAtTheType', actionAtTheType);
       }
       
+      $scope.goCountList = function(num) {
+          
+          switch(num) {
+              case 1:
+                sessionStorage.setItem('teacherBranchName', sessionStorage.atTheName);
+                sessionStorage.setItem('teacherBranchid', sessionStorage.atTheBranchid);
+                $state.go('app.teachersList');
+                break;
+              case 2:
+                sessionStorage.setItem('userBranchName', sessionStorage.atTheName);
+                sessionStorage.setItem('userBranchid', sessionStorage.atTheBranchid);
+                $state.go('app.usersList');
+                break;
+              case 3:
+                sessionStorage.setItem('orderBranchName', sessionStorage.atTheName);
+                sessionStorage.setItem('orderBranchid', sessionStorage.atTheBranchid);
+                $state.go('app.orderList');
+                break;
+          }
+          
+      }
       //noRefreshGetData(getUserData, getDataSpeed);
       //timeoutLock($state);
 }]);
