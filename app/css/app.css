@@ -11611,6 +11611,7 @@ flatdoc .button .badge {
   left: 0;
   background-color: #F5F7FA;
   visibility: hidden;
+  z-index: 999;
 }
 .downList li {
   cursor: pointer;
@@ -11633,4 +11634,25 @@ flatdoc .button .badge {
 }
 .downListIco {
   cursor: pointer;
+}
+.commodityImg {
+  width: 110px;
+  height: 70px;
+  float: left;
+  line-height: 70px;
+  margin-top: 0;
+}
+.uploadCommodityImg {
+  height: auto;
+  border: none;
+  border-radius: 0;
+}
+.statusAction {
+  padding-top: 10px;
+}
+.statusAction > a {
+  margin-right: 5px;
+}
+.statusAction > .noAction {
+  color: #ddd;
 }

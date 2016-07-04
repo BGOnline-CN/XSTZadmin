@@ -17,10 +17,12 @@
       "COURSEMNGT": "课程模板",
       "ATTHECOURSE": "课程查看",
       "ATTHEMNGT": "分校管理",
-      "ORDERLIST": "订单列表",
+      "ORDERLIST": "课程订单",
       "USERSLIST": "家长列表",
       "TEACHERSLIST": "教师列表",
       "USERFEEDBACK": "用户反馈",
+      "COMMODITYLIST": "商品列表",
+      "COMMODITYORDER": "商品订单",
       "SETUP": "系统配置"
     }
   }

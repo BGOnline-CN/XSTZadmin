@@ -1,8 +1,8 @@
-<h3>课程订单</h3>
+<h3>商品订单</h3>
 <h4 class="page-header courseTitle">
-    以下展示所有课程订单
+    以下展示所有商品订单
 </h4>
-<div class="panel panel-default" ng-controller="orderListController">
+<div class="panel panel-default" ng-controller="commodityOrderController">
     <div class="ball-spin-fade-loader list-loading">
         <div></div>
         <div></div>
@@ -15,10 +15,7 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-         <div class="col-lg-4">
-            当前校区：<a href="" class="crumbs" name="{{crumbsBranchid}}">{{orderBranchName ? orderBranchName : '全部校区'}}</a><i class="fa fa-close removeBranchid"></i>
-         </div>
-         <div class="col-lg-4"></div>
+         <div class="col-lg-8"></div>
          <div class="col-lg-4">
              <div class="input-group" style="width: 200px;float:right;">
                 <input type="text" placeholder="{{searchResult != undefined && searchResult != 'undefined' && searchResult ? searchResult : '全部'}}" class="input-sm form-control" ng-model="sOLValue"/>
@@ -41,14 +38,13 @@
         <table id="table-ext-1" class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th style="width:12%;">订单号</th>
-                    <th style="width:15%;">所购课程</th>
+                    <th style="width:15%;">订单号</th>
+                    <th style="width:20%;">所购商品</th>
                     <th style="width:10%;">购买人</th>
                     <th style="width:10%;">电话</th>
-                    <th style="width:8%;">学生</th>
                     <th style="width:5%;">单价</th>
-                    <th style="width:20%;">支付方式</th>
-                    <th style="width:13%;">下单时间</th>
+                    <th style="width:8%;">消费学习币</th>
+                    <th style="width:15%;">下单时间</th>
                     <th style="width:7%;position:relative">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
                         <i class="fa fa-angle-down downListIco"></i>
@@ -57,28 +53,40 @@
                             <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
                         </ul>
                     </th>
+                    <th style="width:10%;">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td ng-class="ONullType" colspan="9">暂无数据</td>
                 </tr>
-                <tr ng-repeat="o in orderData">
+                <tr ng-repeat="o in commodityOrderData">
                     <td ng-bind="o.orderid"></td>
                     <td>
-                        <img ng-src="{{o.course_img}}" alt="Image" class="img-responsive orderCourse-img" />
+                        <img ng-src="{{o.goods_img_thumb}}" alt="Image" class="img-responsive orderCourse-img" />
                         <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin:0;">
-                            <span ng-bind="o.coursename" title="{{o.coursename}}"></span><br/>
-                            <span ng-bind="o.package.package_name+'*'+o.quantity" style="font-size:12px;color:#555;"></span>
+                            <span ng-bind="o.goods_name" title="{{o.goods_name}}"></span><br/>
+                            <span ng-bind="o.attr_name+'*'+o.quantity" style="font-size:12px;color:#555;"></span>
                         </p>
                     </td>
-                    <td ng-bind="o.usertname"></td>
+                    <td ng-bind="o.tname"></td>
                     <td ng-bind="o.phone"></td>
-                    <td ng-bind="o.student_tname"></td>
-                    <td ng-bind="o.package.package_price"></td>
-                    <td ng-bind='"人民币￥"+o.price+"，学习币："+o.xxb'></td>
+                    <td ng-bind="o.attr_price"></td>
+                    <td ng-bind='o.xxb'></td>
                     <td ng-bind="payTime(o)"></td>
-                    <td><div class="label" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
+                    <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
+                    <td>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
+                            <a href="" ng-click="cancelOrder(o.orderid)">取消订单</a>
+                            <a href="" ng-click="sendCommodity(o.goods_name, o.orderid)">发货</a>
+                        </p>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '已完成'">
+                            <span class="noAction">不可操作</span>
+                        </p>
+                        <p class="statusAction" ng-if="orderStatusText(o) == '发货中'">
+                            <span>等待确认收货</span>
+                        </p>
+                    </td>
                 </tr>
                 <tr>
                     <td class="page-td" colspan="9">
