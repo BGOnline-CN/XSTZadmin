@@ -11102,8 +11102,8 @@ flatdoc .button .badge {
 .courseList > a.dashed > img {
     margin: 40px auto;
     display: block;
-    width: 49px;
-    height: 49px;
+    width: 49px !important;
+    height: 49px !important;
 }
 
 .courseDesc {

@@ -731,7 +731,7 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-          $('.class-name').html(sname);
+          // $('.class-name').html(sname);
           getCourseData(sortid);
           nowClassName(i+1)
           judgeClassName();
@@ -1088,7 +1088,7 @@ App.controller('commodityClassController', ['$scope', 'ngDialog', '$rootScope', 
           
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
-          $('.class-name').html(sname);
+          // $('.class-name').html(sname);
           getCommodityData(sortid);
           nowClassName(i+1)
           judgeClassName();
@@ -2443,6 +2443,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
     
       errorJump($state);
       var listLoading = $('.list-loading');
+      parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
      
       var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
@@ -2563,6 +2564,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
             break;
           case "2": // 修改
               listLoading.css({'display':'block'});
+              $scope.isSortid = true;
               $http
                 .post(''+url+'/goods/get_goods', {
                     token: sessionStorage.token, goods_id: sessionStorage.goods_id
@@ -2577,6 +2579,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
                         $scope.addCommodity.goods_name = $scope.commodityDetailsData.goods_name;
                         $scope.addCommodity.shop_price = $scope.commodityDetailsData.shop_price;
                         $scope.addCommodity.goods_brief = $scope.commodityDetailsData.goods_brief;
+                        $scope.addCommodity.sname = $scope.commodityDetailsData.sname;
                         ifrCon = $scope.commodityDetailsData.goods_desc;
                         $scope.addCommodity.attribute = $scope.commodityDetailsData.attribute;
                         $scope.img = rootUrl + $scope.commodityDetailsData.goods_img;
