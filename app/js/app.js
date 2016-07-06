@@ -1679,8 +1679,8 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 2, class: 'label-primary', text: '已支付'},
-          {value: 3, class: 'label-warning', text: '发货中'},
+          {value: 2, class: 'label-primary', text: '待发货'},
+          {value: 3, class: 'label-warning', text: '配送中'},
           {value: 4, class: 'label-success', text: '已完成'},
       ];
       

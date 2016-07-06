@@ -76,14 +76,14 @@
                     <td ng-bind="payTime(o)"></td>
                     <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td>
-                        <p class="statusAction" ng-if="orderStatusText(o) == '已支付'">
+                        <p class="statusAction" ng-if="orderStatusText(o) == '待发货'">
                             <a href="" ng-click="cancelOrder(o.orderid)">取消订单</a>
                             <a href="" ng-click="sendCommodity(o.goods_name, o.orderid)">发货</a>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '已完成'">
                             <span class="noAction">不可操作</span>
                         </p>
-                        <p class="statusAction" ng-if="orderStatusText(o) == '发货中'">
+                        <p class="statusAction" ng-if="orderStatusText(o) == '配送中'">
                             <span>等待确认收货</span>
                         </p>
                     </td>
