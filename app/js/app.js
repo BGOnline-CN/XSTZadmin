@@ -590,6 +590,9 @@ var requestError = (function(response, $state, ngDialog) {
     if(response.data.code == 202) {
         alert('账户在另一台电脑登陆，请确保账户安全！');
         $state.go('page.login');
+    }else if(response.data.code == 203){
+        alert('账户登录异常，请重新登录！');
+        $state.go('page.login');
     }else {
         ngDialog.open({
           template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
@@ -3064,11 +3067,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
             .then(function(response) {
 
                 if ( response.data.code != 200 ) {
-                    ngDialog.open({
-                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "，刷新浏览器试试吧！</p>",
-                      plain: true,
-                      className: 'ngdialog-theme-default'
-                    });
+                    requestError(response, $state, ngDialog);
                 }
                 else{ 
                     $scope.PCAS = response.data.data;
