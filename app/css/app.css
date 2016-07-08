@@ -11656,3 +11656,6 @@ flatdoc .button .badge {
 .statusAction > .noAction {
   color: #ddd;
 }
+.COTable {
+  overflow: hidden;
+}

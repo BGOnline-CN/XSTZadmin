@@ -882,8 +882,8 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                     $('.class-name').html(changeSname);
                     sessionStorage.setItem('sname', changeSname);
                     getCourseClass();
-                    ngDialog.close();
                 }
+                ngDialog.close();
             }, function(x) { 
                 ngDialog.open({
                   template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
