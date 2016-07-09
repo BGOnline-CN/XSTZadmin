@@ -2492,7 +2492,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
           case "1": // 添加
               ifrCon = undefined;
               $scope.addSubmit = function() {
-                  $('.btn').addClass('disabled');
+                  
                   var packageRow = $('.packageRow');
                   var comboInput = $('.comboInput');
                   
@@ -2533,7 +2533,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
                             attribute: JSON.stringify(comboArr)
                         })
                         .then(function(response) {
-                            $('.btn').removeClass('disabled');
+   
                             listLoading.css({'display':'none'});
                             if ( response.data.code != 200 ) {
                                 requestError(response, $state, ngDialog);
@@ -2548,7 +2548,7 @@ App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state'
                                 getCommodityClass();
                             }
                         }, function(x) { 
-                          $('.btn').removeClass('disabled');
+
                           listLoading.css({'display':'none'});
                           ngDialog.open({
                             template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
@@ -3134,6 +3134,7 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                               }else{ 
                                   $scope.branchid = response.data.data.branchid;
                                   if(confirm('你还没有设置管理员哦！去设置？')) {
+                                      $('.saveAtThe').addClass('disabled');
                                       ngDialog.open({
                                         template: "<p style='text-align:center;margin: 0;'>点击左下角设置管理员</p>",
                                         plain: true,
@@ -3151,13 +3152,13 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
                                   }
                               }
                           }, function(x) {
-                            $('.btn').removeClass('disabled');
-                            ngDialog.open({
-                              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                              plain: true,
-                              className: 'ngdialog-theme-default'
-                            });
-                            ngDialog.close();
+                              $('.btn').removeClass('disabled');
+                              ngDialog.open({
+                                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                                plain: true,
+                                className: 'ngdialog-theme-default'
+                              });
+                              ngDialog.close();
                           });
 
                   };
