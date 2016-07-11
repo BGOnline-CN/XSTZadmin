@@ -1728,31 +1728,33 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       })
       
       $scope.cancelOrder = function(orderid) { //取消订单
-          $http
-            .post(''+url+'/list/goods_order_edit', {
-                token: sessionStorage.token, status: 0, order_id: orderid
-            })
-            .then(function(response) {
-                listLoading.css({'display':'none'});
-                if ( response.data.code != 200 ) {
-                    requestError(response, $state, ngDialog);
+          if(confirm('确定取消订单？')) {
+            $http
+              .post(''+url+'/list/goods_order_edit', {
+                  token: sessionStorage.token, status: 0, order_id: orderid
+              })
+              .then(function(response) {
+                  listLoading.css({'display':'none'});
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }
+                  else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getCommodityOrderListData();
                 }
-                else{ 
+              }, function(x) { 
+                  listLoading.css({'display':'none'});
                   ngDialog.open({
-                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
                     plain: true,
                     className: 'ngdialog-theme-default'
                   });
-                  getCommodityOrderListData();
-              }
-            }, function(x) { 
-                listLoading.css({'display':'none'});
-                ngDialog.open({
-                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-                  plain: true,
-                  className: 'ngdialog-theme-default'
-                });
-            });
+              });
+          }
       }
       
 
