@@ -57,7 +57,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: 'Think Torch',
+    name: '小书童管理后台',
     description: '小书童管理后台',
     year: ((new Date()).getFullYear()),
     layout: {
