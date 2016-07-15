@@ -3108,7 +3108,9 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
       switch(sessionStorage.actionAtTheType) {
           
           case "1": // 添加
-              
+              $scope.quxiaoBtn = function() {
+                  $state.go('app.atTheMngt');
+              }
               $scope.titleOfNewOrEdit = '新增分校管理员';
               $scope.pwdOfNewOrEdit = '密码';
               $('.courseTitle').text('添加分校');
@@ -3218,8 +3220,12 @@ App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'F
             break;
           case "2": // 修改
 
-              $('.courseTitle').text('修改分校');
+              $scope.quxiaoBtn = function() {
+                  $state.go('app.atTheDetails');
+              }
+                  
               
+              $('.courseTitle').text('修改分校');
               listLoading.css({'display':'block'});
               $http
                 .post(''+url+'/branch/getbranch', {
