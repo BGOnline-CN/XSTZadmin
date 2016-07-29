@@ -18,7 +18,7 @@ var lockClockInit = (function(lockCountInit){
 });
 
 if(localStorage.lockTime == undefined || localStorage.lockTime == 'undefined') {
-    localStorage.setItem('lockTime', 5); // 默认自动锁屏时间 5分钟 
+    localStorage.setItem('lockTime', 5); // 默认自动锁屏时间 5分钟
 }
 
 
