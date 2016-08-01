@@ -1168,7 +1168,7 @@ App.controller('commodityListController', ['$scope', '$rootScope', '$http', '$fi
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/goods/index', {
-                token: sessionStorage.token, p: cp, sortid: sortid
+                token: sessionStorage.token, p: cp, sortid: sortid, order: sessionStorage.order_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -1219,6 +1219,21 @@ App.controller('commodityListController', ['$scope', '$rootScope', '$http', '$fi
       $scope.rClassName = function() {
           $('.class-name').html("<input class='form-control ng-touched rcName' type='text' value='"+sessionStorage.sname+"'>");
           $('.rcName').focus();
+      }
+
+      if(sessionStorage.radioIndex == '0') {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }else if(sessionStorage.radioIndex == '1') {
+          $('.packageRadio').eq(1).addClass('label-warning');
+      }else {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }
+      $scope.selectpRadio = function(_index, oNum) { // 按条件排序
+        sessionStorage.setItem('radioIndex', _index);
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        sessionStorage.setItem('order_num', oNum);
+        getCommodityData(sessionStorage.sortid);
       }
 
       $(document).on('blur', '.rcName', function() { // 修改分类名称
@@ -1429,14 +1444,13 @@ App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filt
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/list/course', {
-                token: sessionStorage.token, p: cp, search: s, branch_name: bn
+                token: sessionStorage.token, p: cp, search: s, branch_name: bn, order: sessionStorage.course_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }
-                else{ 
+                }else { 
                     $scope.course = response.data.data.mod_data; 
                     var page = response.data.data.page_data;
                     $scope.showTotalItems = page.totalCount;
@@ -1459,7 +1473,21 @@ App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filt
       };
       $scope.maxSize = 5; // 最多显示5页
       
-      
+      if(sessionStorage.radioIndex == '0') {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }else if(sessionStorage.radioIndex == '1') {
+          $('.packageRadio').eq(1).addClass('label-warning');
+      }else {
+          $('.packageRadio').eq(0).addClass('label-warning');
+      }
+      $scope.selectpRadio = function(_index, oNum) { // 按条件排序
+        sessionStorage.setItem('radioIndex', _index);
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        sessionStorage.setItem('course_num', oNum);
+        getAtTheCourseData(sessionStorage.sortid);
+      }
+
       $scope.showCDetails = function(course_name, courseid, sname, branch_name) {
           sessionStorage.setItem('course_name', course_name);
           sessionStorage.setItem('courseid', courseid);
@@ -1540,6 +1568,10 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
           {value: 2, text: '女'}
       ];
       
+      $scope.showRechargeTime = function(t) {
+          getOrderListData('', t, '');
+      }
+
       $scope.showSex = function(x) {
           if(x.sex) {
               selected = $filter('filter')($scope.sexs, {value: x.sex});
@@ -1727,6 +1759,10 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
           }
       })
       
+      $scope.showRechargeTime = function(t) {
+          getCommodityOrderListData('', t, '');
+      }
+
       $scope.cancelOrder = function(orderid) { //取消订单
           if(confirm('确定取消订单？')) {
             $http

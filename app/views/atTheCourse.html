@@ -20,6 +20,8 @@
     </div>
     <h4 class="page-header courseTitle">
         <span class="class-name">{{sname == 'undefined' || sname == undefined ? '课程数量' : sname}}</span>（{{showTotalItems}}）
+                <div class="label label-default packageRadio" ng-click="selectpRadio(0, '')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">上架时间</div>
+        <div class="label label-default packageRadio" ng-click="selectpRadio(1, 'sales')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">销量</div>
     </h4>
     <div class="row">
         <div class="col-xs-4 col-md-2 courseList ZHCourseList">
