@@ -43,7 +43,7 @@
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
             </p>
             <a ui-sref="app.commodityDetails" ng-click="showCDetails(c.goods_name,c.goods_id,c.sname)" ng-mouseover="showCourseAct($index)">
-                <img ng-src="{{c.goods_img}}">
+                <img ng-src="{{c.goods_img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="c.goods_name"></p>
                     <small ng-bind="c.goods_brief" title={{c.goods_brief}}></small>

@@ -58,7 +58,7 @@
                 <tr ng-repeat="t in teacherData">
                     <td>
                         <div class="media">
-                            <img ng-src="{{t.header}}" alt="Image" class="img-responsive img-circle" />
+                            <img ng-src="{{t.header ? t.header : defaultHeader}}" class="img-responsive img-circle" />
                         </div>
                     </td>
                     <td ng-bind="t.tname"></td>

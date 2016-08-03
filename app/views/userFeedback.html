@@ -43,7 +43,7 @@
                 <tr ng-repeat="f in feedback">
                     <td>
                         <div class="media">
-                            <img ng-src="{{f.user.header}}" alt="Image" class="img-responsive img-circle" />
+                            <img ng-src="{{f.user.header ? f.user.header : defaultHeader}}" class="img-responsive img-circle" />
                         </div>
                     </td>
                     <td ng-bind="f.user.tname"></td>

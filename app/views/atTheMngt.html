@@ -35,7 +35,7 @@
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeBranch(a.branchid)"></i>
             </p>
             <a href="#" ng-click="showAtTheDetails(a.name,a.branchid)" ng-mouseover="showCourseAct($index)">
-                <img ng-src="{{a.img}}">
+                <img ng-src="{{a.img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="a.name"></p>
                     <small ng-bind="a.summary" title={{a.summary}}></small>
