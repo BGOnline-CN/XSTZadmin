@@ -11659,3 +11659,49 @@ flatdoc .button .badge {
 .COTable {
   overflow: hidden;
 }
+.bannerRadio {
+  padding-top: 0 !important;
+  margin: 0 !important;
+}
+.bannerCarousel {
+  height: 168px !important;
+}
+.bgBanner {
+  border: 1px solid #DDE6E9;
+}
+.bannerTypeHide {
+  display: none;
+}
+.setStep {
+  display: inline-block;
+  margin: 10px 15px 15px 0;
+}
+.showStudentHref {
+  display: inline-block;
+}
+.hiddenStudentHref {
+  display: none;
+}
+.bannerRadio > .fa-circle {
+  background-color: #fff !important;
+}
+.bannerRadio > .fa-circle::before {
+  color: #FF881C !important;
+}
+.bg-banner {
+  overflow: hidden;
+}
+.bg-banner-li {
+  height: 100%;
+}
+.bg-banner-li > a {
+  width: 20px;
+  height: 20px;
+  display: block;
+  border-radius: 50%;
+  border: 1px solid red;
+  float: right;
+  position: relative;
+  left: 10px;
+  top: -10px;
+}

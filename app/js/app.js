@@ -58,8 +58,8 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   // Scope Globals
   // ----------------------------------- 
   $rootScope.app = {
-    name: '小书童管理后台',
-    description: '小书童管理后台',
+    name: '课堂外总校管理系统',
+    description: '课堂外总校管理系统',
     year: ((new Date()).getFullYear()),
     layout: {
       isFixed: true,
@@ -5648,6 +5648,150 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
               className: 'ngdialog-theme-default'
             });
         }
+    }
+
+    // APP广告位设置
+    $http
+      .post(''+url+'/tcourse/index', { // 获取课程列表
+          token: sessionStorage.token, get_type: 'all'
+      })
+      .then(function(response) {
+          if ( response.data.code != 200 ) {
+              requestError(response, $state, ngDialog);
+          }
+          else{ 
+              $scope.course = response.data.data.mod_data;
+          }
+      }, function(x) { 
+        ngDialog.open({
+          template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+          plain: true,
+          className: 'ngdialog-theme-default'
+        });
+    });
+    
+    var uploader = $scope.uploader = new FileUploader({
+        url: ''+url+'/gd/upload'
+    })
+
+    var bannerUrl = function(_index) { // 生成图片地址
+        uploader.onSuccessItem = function(response) {
+            $('.bannerTr').eq(_index).children().eq(0).attr('name', jQuery.parseJSON(response._xhr.response).url);
+        };
+    }
+
+    $('.bannerTypeSetHide12').css({'display':'block'});
+    $('.bannerTypeSetHide22').css({'display':'block'});
+    $('.bannerTypeSetHide32').css({'display':'block'});
+    $('.bannerTypeSetHide42').css({'display':'block'});
+    
+    var jumpType = function(_index) { // 生成跳转方式
+        if(!($('.bannerTr').eq(_index).children().eq(1).attr('name'))) {
+            $('.bannerTr').eq(_index).children().eq(1).attr('name', 2);
+        }
+        $scope.selectbRadio = function(type) {
+            switch(type) {
+                case 1:
+                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'none'});
+                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'block'});
+                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
+                  break;
+                case 2:
+                  $('.bannerTypeSetHide'+(_index+1)+'1').css({'display':'none'});
+                  $('.bannerTypeSetHide'+(_index+1)+'2').css({'display':'block'});
+                  $('.bannerTr').eq(_index).children().eq(1).attr('name', type);
+                  break;
+            }
+        }
+    }
+    
+    var jumpCourseId = function(_index) { // 生成课程id
+        $scope.getCourseId = function(courseid) {
+            $('.bannerTr').eq(_index).children().eq(2).attr('name', courseid);
+        }
+    }
+
+    var jumpUrl = function(_index) {
+        $scope.getJumpUrl = function(url) { // 生成跳转链接
+            $('.bannerTr').eq(_index).children().eq(2).attr('name', url);
+        }
+    }
+
+    var startCreate = function(_index) { // 开始生成name
+        bannerUrl(_index);
+        jumpType(_index);
+        jumpCourseId(_index);
+        jumpUrl(_index);
+    }
+
+    $scope.setImgUrl = function(_index) {
+        switch(_index) {
+            case 0:
+              startCreate(_index);
+              break; 
+            case 1:
+              startCreate(_index);
+              break; 
+            case 2:
+              startCreate(_index);
+              break; 
+            case 3:
+              startCreate(_index);
+              break; 
+        }
+    }
+
+    
+    $scope.createBanner = function() { // 生成预览
+
+        bannerArr = new Array();
+        var bannerTr = $('.bannerTr');
+        var attributeName = ['img', 'type', 'link'];
+        for(var i = 0; i < bannerTr.length; i++) {
+            var banners = {};
+            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
+                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
+            }
+            bannerArr.push(banners);
+        }
+        console.log(bannerArr);
+    }
+    
+    $scope.saveBanner = function() { // 确认保存
+
+        bannerArr = new Array();
+        var bannerTr = $('.bannerTr');
+        var attributeName = ['img', 'type', 'link'];
+        for(var i = 0; i < bannerTr.length; i++) {
+            var banners = {};
+            for(var c = 0; c < bannerTr.eq(i).children().length; c++) {
+                banners[attributeName[c]] = bannerTr.eq(i).children().eq(c).attr('name');
+            }
+            bannerArr.push(banners);
+        }
+
+        $http
+          .post(''+url+'/setting/setbanner', { // 设置banner
+              token: sessionStorage.token, banner: bannerArr
+          })
+          .then(function(response) {
+              if ( response.data.code != 200 ) {
+                  requestError(response, $state, ngDialog);
+              }
+              else{ 
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              }
+          }, function(x) { 
+            ngDialog.open({
+              template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+              plain: true,
+              className: 'ngdialog-theme-default'
+            });
+        });
     }
     
 }])
