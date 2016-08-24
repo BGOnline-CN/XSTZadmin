@@ -5542,12 +5542,10 @@ App.controller('rewardXXBController', ['$scope', '$state', '$http', 'ngDialog',
  * version 1.0 2016-3-31
  =========================================================*/
 
-App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
+App.controller('setLaunchCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
     
     errorJump($state);
-
-
-
+    var launchStartDatas,launchEndDatas;
     var start = {
         elem: '#start',
         format: 'YYYY/MM/DD hh:mm:ss',
@@ -5558,7 +5556,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
         choose: function(datas){
             end.min = datas; //开始日选好后，重置结束日的最小日期
             end.start = datas //将结束日的初始值设定为开始日
-            sessionStorage.setItem("launchStartDatas", datas);
+            launchStartDatas = datas;
         }
     };
     var end = {
@@ -5570,7 +5568,7 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
         istoday: false,
         choose: function(datas){
             start.max = datas; //结束日选好后，重置开始日的最大日期
-            sessionStorage.setItem("launchEndDatas", datas);
+            launchEndDatas = datas;
         }
     };
     
@@ -5582,34 +5580,12 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
       laydate(end);
     }
 
-
-
-
-    $scope.slider1 = parseInt(localStorage.lockTime);
+    // $scope.slider1 = parseInt(localStorage.lockTime);
     
-    $scope.change = function() {
-        localStorage.setItem('lockTime', $scope.slider1);
-    }
+    // $scope.change = function() {
+    //     localStorage.setItem('lockTime', $scope.slider1);
+    // }
 
-    $http.post(''+url+'/setting/getlaunchimage', {
-        token: sessionStorage.token
-      }).then(function(response) {
-          if(response.data.code != 200) {
-              requestError(response, $state, ngDialog);
-          }else { 
-              $scope.launchUrl = response.data.data.link;
-              $scope.startDate = response.data.data.begin_time;
-              $scope.endDate = response.data.data.end_time;
-              $scope.img = rootUrl + response.data.data.img;
-          }
-      }, function(x) {
-          ngDialog.open({
-            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
-            plain: true,
-            className: 'ngdialog-theme-default'
-          });
-      })
-    
     var uploader = $scope.uploader = new FileUploader({
         url: ''+url+'/gd/upload'
     })
@@ -5620,14 +5596,13 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     };
     
     $scope.saveLaunch = function() {
-      
-      if(sessionStorage.launchStartDatas != undefined || sessionStorage.launchStartDatas != 'undefined') {
+      if(launchStartDatas && launchEndDatas) {
             $('.btn').addClass('disabled');
             $http.post(''+url+'/setting/launchimage_add', {
                 token: sessionStorage.token, 
                 name: '启动图',
-                begin_time: sessionStorage.launchStartDatas,
-                end_time: sessionStorage.launchEndDatas,
+                begin_time: launchStartDatas,
+                end_time: launchEndDatas,
                 img: sessionStorage.uploadLaunchUrl,
                 link: $scope.launchUrl
               }).then(function(response) {
@@ -5651,23 +5626,29 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
               })
         }else {
             ngDialog.open({
-              template: "<p style='text-align:center;margin: 0;'>开始时间必填！</p>",
+              template: "<p style='text-align:center;margin: 0;'>开始与结束时间必填！</p>",
               plain: true,
               className: 'ngdialog-theme-default'
             });
         }
     }
 
+}])
+
+App.controller('setBannerCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
+    
+    var uploader = $scope.uploader = new FileUploader({
+        url: ''+url+'/gd/upload'
+    })
     // APP广告位设置
     $http
       .post(''+url+'/tcourse/index', { // 获取课程列表
           token: sessionStorage.token, get_type: 'all'
       })
       .then(function(response) {
-          if ( response.data.code != 200 ) {
+          if( response.data.code != 200 ) {
               requestError(response, $state, ngDialog);
-          }
-          else{ 
+          }else { 
               $scope.course = response.data.data.mod_data;
           }
       }, function(x) { 
@@ -5677,10 +5658,6 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
           className: 'ngdialog-theme-default'
         });
     });
-    
-    var uploader = $scope.uploader = new FileUploader({
-        url: ''+url+'/gd/upload'
-    })
 
     var bannerUrl = function(_index) { // 生成图片地址
         uploader.onSuccessItem = function(response) {
@@ -5819,7 +5796,6 @@ App.controller('setUpCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDia
     }
     
 }])
-
 
 /**=========================================================
  * Module: form-xeditable.js

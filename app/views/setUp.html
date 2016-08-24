@@ -3,7 +3,7 @@
 <div class="panel panel-default">
    <div class="panel-heading">常规设置</div>
    <div class="panel-body">
-      <form ng-controller="setUpCtrl" novalidate="" class="form-validate form-horizontal" >
+      <form ng-controller="setLaunchCtrl" novalidate="" class="form-validate form-horizontal" >
          <!--<fieldset>
             <div class="form-group">
                <label class="col-sm-2 control-label" title="无操作分钟数后自动锁定屏幕，0不锁定">自动锁屏时间</label>
@@ -57,7 +57,9 @@
                
             </div>
          </fieldset>
-         <fieldset>
+      </form>
+      <form ng-controller="setBannerCtrl" novalidate="" class="form-validate form-horizontal" >
+        <fieldset>
             <div class="form-group">
                <label class="col-sm-2 control-label" title="App启动页面广告图设置">App广告位设置</label>
                <div class="col-sm-10">
