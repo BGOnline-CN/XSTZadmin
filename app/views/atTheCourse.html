@@ -1,10 +1,9 @@
 <h3 ng-controller="atTheCourseSearchController">
     搜索结果：{{searchResult ? searchResult : '全部'}}
-    <div class="input-group" style="width: 200px;float:right;">
-        <input type="text" placeholder="" class="input-sm form-control" ng-model="sRLValue"/>
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-sm btn-default" ng-click="searchAtTheCourse()">搜索</button>
-        </span>
+    <div class="input-group" style="float:right;">
+        <input type="text" placeholder="按分校名称搜索" class="input-sm form-control" ng-model="sBLValue" style="width:120px;border-radius:0;display:inline;margin-right:15px;"/>
+        <input type="text" placeholder="按课程名称搜索" class="input-sm form-control" ng-model="sRLValue" style="width:120px;border-radius:0;display:inline;margin-right:15px;"/>
+        <button type="button" class="btn btn-sm btn-default" ng-click="searchAtTheCourse()">搜索</button>
     </div>
 </h3>
 <div class="clearfix" ng-controller="atTheCourseController">

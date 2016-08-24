@@ -1417,8 +1417,16 @@ App.controller('atTheCourseSearchController', ['$scope', '$rootScope', '$http', 
   function($scope, $rootScope, $http, $filter, $state, ngDialog) {
 
       $scope.searchAtTheCourse = function() {
-          $scope.searchResult = $scope.sRLValue;
-          getAtTheCourseData('', $scope.sRLValue);
+          if($scope.sBLValue && $scope.sRLValue) {
+            $scope.searchResult = $scope.sBLValue + '校区 - ' + $scope.sRLValue;
+          }else if($scope.sBLValue) {
+            $scope.searchResult = $scope.sBLValue + '校区 - 所有课程';
+          }else if($scope.sRLValue) {
+              $scope.searchResult = '全部校区 - ' + $scope.sRLValue;
+          }else {
+              $scope.searchResult = '全部校区 - 所有课程';
+          }
+          getAtTheCourseData('', $scope.sRLValue, $scope.sBLValue);
       }
       // timeoutLock($state);
 }]);
