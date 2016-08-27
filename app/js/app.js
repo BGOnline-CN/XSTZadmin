@@ -5665,14 +5665,15 @@ App.controller('setBannerCtrl', ['$scope', '$http', 'FileUploader', '$state', 'n
         };
     }
 
-    $('.bannerTypeSetHide12').css({'display':'block'});
-    $('.bannerTypeSetHide22').css({'display':'block'});
-    $('.bannerTypeSetHide32').css({'display':'block'});
-    $('.bannerTypeSetHide42').css({'display':'block'});
+    // 设置跳转方式输入框的显示
+    $('.bannerTypeSetHide11').css({'display':'block'});
+    $('.bannerTypeSetHide21').css({'display':'block'});
+    $('.bannerTypeSetHide31').css({'display':'block'});
+    $('.bannerTypeSetHide41').css({'display':'block'});
     
     var jumpType = function(_index) { // 生成跳转方式
         if(!($('.bannerTr').eq(_index).children().eq(1).attr('name'))) {
-            $('.bannerTr').eq(_index).children().eq(1).attr('name', 2);
+            $('.bannerTr').eq(_index).children().eq(1).attr('name', 1);
         }
         $scope.selectbRadio = function(type) {
             switch(type) {

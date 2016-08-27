@@ -11688,9 +11688,6 @@ flatdoc .button .badge {
 .bannerRadio > .fa-circle {
   background-color: #fff !important;
 }
-.bannerRadio > .fa-circle::before {
-  color: #FF881C !important;
-}
 .bg-banner {
   overflow: hidden;
 }
