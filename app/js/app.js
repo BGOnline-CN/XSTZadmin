@@ -1426,7 +1426,9 @@ App.controller('atTheCourseSearchController', ['$scope', '$rootScope', '$http', 
           }else {
               $scope.searchResult = '全部校区 - 所有课程';
           }
-          getAtTheCourseData('', $scope.sRLValue, $scope.sBLValue);
+          sessionStorage.setItem('sRLValue', $scope.sRLValue);
+          sessionStorage.setItem('sBLValue', $scope.sBLValue);
+          getAtTheCourseData('', sessionStorage.sRLValue, sessionStorage.sBLValue);
       }
       // timeoutLock($state);
 }]);
@@ -1453,7 +1455,7 @@ App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filt
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/list/course', {
-                token: sessionStorage.token, p: cp, search: s, branch_name: bn, order: sessionStorage.course_num
+                token: sessionStorage.token, p: cp, search: sessionStorage.sRLValue, branch_name: sessionStorage.sBLValue, order: sessionStorage.course_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
