@@ -1419,13 +1419,22 @@ App.controller('atTheCourseSearchController', ['$scope', '$rootScope', '$http', 
       $scope.searchAtTheCourse = function() {
           if($scope.sBLValue && $scope.sRLValue) {
             $scope.searchResult = $scope.sBLValue + '校区 - ' + $scope.sRLValue;
+            sessionStorage.setItem('sRLValue', $scope.sRLValue);
+            sessionStorage.setItem('sBLValue', $scope.sBLValue);
           }else if($scope.sBLValue) {
             $scope.searchResult = $scope.sBLValue + '校区 - 所有课程';
+            sessionStorage.setItem('sRLValue', '');
+            sessionStorage.setItem('sBLValue', $scope.sBLValue);
           }else if($scope.sRLValue) {
               $scope.searchResult = '全部校区 - ' + $scope.sRLValue;
+              sessionStorage.setItem('sRLValue', $scope.sRLValue);
+              sessionStorage.setItem('sBLValue', '');
           }else {
               $scope.searchResult = '全部校区 - 所有课程';
+              sessionStorage.setItem('sRLValue', '');
+              sessionStorage.setItem('sBLValue', '');
           }
+          
           getAtTheCourseData('', $scope.sRLValue, $scope.sBLValue);
       }
       // timeoutLock($state);
@@ -1453,7 +1462,7 @@ App.controller('atTheCourseController', ['$scope', '$rootScope', '$http', '$filt
           $scope.sname = sessionStorage.sname;
           $http
             .post(''+url+'/list/course', {
-                token: sessionStorage.token, p: cp, search: s, branch_name: bn, order: sessionStorage.course_num
+                token: sessionStorage.token, p: cp, search: s ? s : sessionStorage.sRLValue, branch_name: bn ? bn : sessionStorage.sBLValue, order: sessionStorage.course_num
             })
             .then(function(response) {
                 listLoading.css({'display':'none'});
@@ -5665,14 +5674,15 @@ App.controller('setBannerCtrl', ['$scope', '$http', 'FileUploader', '$state', 'n
         };
     }
 
-    $('.bannerTypeSetHide12').css({'display':'block'});
-    $('.bannerTypeSetHide22').css({'display':'block'});
-    $('.bannerTypeSetHide32').css({'display':'block'});
-    $('.bannerTypeSetHide42').css({'display':'block'});
+    // 设置跳转方式输入框的显示
+    $('.bannerTypeSetHide11').css({'display':'block'});
+    $('.bannerTypeSetHide21').css({'display':'block'});
+    $('.bannerTypeSetHide31').css({'display':'block'});
+    $('.bannerTypeSetHide41').css({'display':'block'});
     
     var jumpType = function(_index) { // 生成跳转方式
         if(!($('.bannerTr').eq(_index).children().eq(1).attr('name'))) {
-            $('.bannerTr').eq(_index).children().eq(1).attr('name', 2);
+            $('.bannerTr').eq(_index).children().eq(1).attr('name', 1);
         }
         $scope.selectbRadio = function(type) {
             switch(type) {
