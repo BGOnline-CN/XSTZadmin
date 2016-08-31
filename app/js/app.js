@@ -226,6 +226,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('angularFileUpload', 'filestyle')   
     })
 
+    .state('app.adminInfo', {
+        url: '/adminInfo',
+        title: '个人设置',
+        templateUrl: helper.basepath('adminInfo.html')
+    })
+    
     // page
     .state('page', {
         url: '/page',
@@ -5543,6 +5549,93 @@ App.controller('rewardXXBController', ['$scope', '$state', '$http', 'ngDialog',
       }
       
 }]);
+
+
+
+/**=========================================================
+ * adminInfoController
+ * author: BGOnline
+ * version 1.0 2016-8-31
+ =========================================================*/
+ 
+App.controller('adminInfoController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
+      
+      errorJump($state);
+      
+      $scope.vShow = function(v) {
+          switch(v) {
+              case 0:
+                $('.vShow2').css({'visibility':'hidden'});
+                break;
+              case 1: 
+                $('.vShow2').css({'visibility':'visible'});
+                break;
+          }
+      }
+      
+      $scope.admin = {};
+      
+      getBranchData = function() {
+        
+         $http // 获取校区信息
+            .post(''+url+'/setting/getsysuser', {
+                token: sessionStorage.token
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    $scope.admin = response.data.data;
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+            });
+      }
+      
+      getBranchData();
+      
+      $scope.setAdminInfo = function() { // 设置管理员密码
+        
+          if($scope.setAdminInfoForm.$valid) {
+              $http
+                .post(''+url+'/setting/setsysuser', {
+                    token: sessionStorage.token, 
+                    old_password: $scope.admin.old_password, 
+                    password: $scope.admin.password
+                })
+                .then(function(response) {
+                    if ( response.data.code != 200 ) {
+                        requestError(response, $state, ngDialog);
+                    }
+                    else{
+                        alert('密码修改成功，点击确定重新登录！');
+                        signOut();
+                    }
+                }, function(x) { 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>请确认密码输入正确</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+      };
+      
+}]);
+
 
 
 /**=========================================================

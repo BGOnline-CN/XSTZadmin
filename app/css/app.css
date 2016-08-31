@@ -11258,7 +11258,7 @@ flatdoc .button .badge {
     color: #989898;
     padding: 6px 0;
 }
-.plate > .row-div {
+.plate .row-div {
     padding: 10px 0;
 }
 .plate {
@@ -11271,6 +11271,12 @@ flatdoc .button .badge {
     width: 100px;
     float: right;
     margin-right: 20px;
+}
+.setAdminSave{
+  margin: 0;
+}
+.vShow2 {
+  visibility: hidden;
 }
 .search-bg {
     width: 200px;
