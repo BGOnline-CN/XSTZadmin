@@ -33,12 +33,16 @@
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="a in atThe" ng-mouseleave="closeCourseAct($index)">
             <p class="courseAction">
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeBranch(a.branchid)"></i>
+                <i class="fa fa-power-off c-btn removeIco" ng-click="offBranch(a.branchid)"></i>
             </p>
             <a href="#" ng-click="showAtTheDetails(a.name,a.branchid)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{a.img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="a.name"></p>
                     <small ng-bind="a.summary" title={{a.summary}}></small>
+                </div>
+                <div class="mask" ng-if="a.is_open > 0">
+                    <span>暂停营业</span>
                 </div>
             </a>
         </div>

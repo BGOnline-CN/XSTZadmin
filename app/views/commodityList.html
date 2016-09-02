@@ -16,7 +16,7 @@
         <div></div>
     </div>
     <h4 class="page-header courseTitle">
-        <span class="class-name">{{sname == 'undefined' || sname == undefined ? '全部商品' : sname}}</span>（{{showTotalItems}}）
+        <span class="class-name" ng-bind="sname == 'undefined' || sname == undefined ? '全部商品' : sname"></span>（{{showTotalItems}}）
         <div dropdown="dropdown" class="btn-group rdClassNameBtn">
             <button aria-expanded="false" aria-haspopup="true" type="button" ng-disabled="disabled" dropdown-toggle="" class="btn dropdown-toggle btn-default changeCourseName">
                 <i class="fa fa-pencil changeCourseFa"></i>
@@ -28,8 +28,8 @@
                 </li>
             </ul>
         </div>
-        <div class="label label-default packageRadio" ng-click="selectpRadio(0, '')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">上架时间</div>
-        <div class="label label-default packageRadio" ng-click="selectpRadio(1, 'sales')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">销量</div>
+        <!--<div class="label label-default packageRadio" ng-click="selectpRadio(0, '')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">上架时间</div>
+        <div class="label label-default packageRadio" ng-click="selectpRadio(1, 'sales')" style="padding:6px;margin-left:10px;cursor:pointer;font-size:80%;">销量</div>-->
     </h4>
     <div class="row">
         <div class="col-xs-4 col-md-2 courseList">
@@ -39,10 +39,10 @@
             </a>
         </div>
         <div class="col-xs-4 col-md-2 courseList" ng-repeat="c in commodity" ng-mouseleave="closeCourseAct($index)">
-            <p class="courseAction" name="{{c.goods_id}}">
+            <p class="courseAction" name="{{c.supplies_goods_id}}">
                 <i class="fa fa-trash-o c-btn removeIco" ng-click="removeCourse($index)"></i>
             </p>
-            <a ui-sref="app.commodityDetails" ng-click="showCDetails(c.goods_name,c.goods_id,c.sname)" ng-mouseover="showCourseAct($index)">
+            <a ui-sref="app.commodityDetails" ng-click="showCDetails(c.goods_name,c.supplies_goods_id,c.sname)" ng-mouseover="showCourseAct($index)">
                 <img ng-src="{{c.goods_img}}" alt="Image">
                 <div class="courseDesc">
                     <p ng-bind="c.goods_name"></p>

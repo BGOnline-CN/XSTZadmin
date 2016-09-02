@@ -65,6 +65,12 @@
     "translate": "sidebar.nav.COMMODITYORDER"
   },
   {
+    "text": "充值记录",
+    "sref": "app.xxbRechargeRecords",
+    "icon": "fa fa-gift",
+    "translate": "sidebar.nav.XXBRECHARGERECORDS"
+  },
+  {
     "text": "系统配置",
     "sref": "app.setUp",
     "icon": "fa fa-cogs",

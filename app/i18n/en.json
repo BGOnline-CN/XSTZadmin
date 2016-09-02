@@ -21,8 +21,9 @@
       "USERSLIST": "家长列表",
       "TEACHERSLIST": "教师列表",
       "USERFEEDBACK": "用户反馈",
-      "COMMODITYLIST": "商品列表",
+      "COMMODITYLIST": "商品管理",
       "COMMODITYORDER": "商品订单",
+      "XXBRECHARGERECORDS": "充值记录",
       "SETUP": "系统配置"
     }
   }
