@@ -12,8 +12,10 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 // 全局
 // var url = 'http://xiaoshutong.thinktorch.cn/backend/web'; // API
 // var rootUrl = 'http://xiaoshutong.thinktorch.cn';
-var url = 'http://192.168.1.200/xst/backend/web'; // API
-var rootUrl = 'http://192.168.1.200/xst';
+// var url = 'http://192.168.1.200/xst/backend/web'; // API
+// var rootUrl = 'http://192.168.1.200/xst';
+var url = 'http://testketangwai.thinktorch.cn/backend/web'; // API
+var rootUrl = 'http://testketangwai.thinktorch.cn/';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
 var lockCountInit = 0; // 锁屏计数器初始化
