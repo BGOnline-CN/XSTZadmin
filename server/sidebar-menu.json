@@ -35,7 +35,7 @@
     "translate": "sidebar.nav.ORDERLIST"
   },
   {
-    "text": "家长列表",
+    "text": "用户列表",
     "sref": "app.usersList",
     "icon": "fa fa-users",
     "translate": "sidebar.nav.USERSLIST"
@@ -65,10 +65,10 @@
     "translate": "sidebar.nav.COMMODITYORDER"
   },
   {
-    "text": "充值记录",
-    "sref": "app.xxbRechargeRecords",
-    "icon": "fa fa-gift",
-    "translate": "sidebar.nav.XXBRECHARGERECORDS"
+    "text": "分校收支",
+    "sref": "app.fundFlow",
+    "icon": "fa fa-file-text-o",
+    "translate": "sidebar.nav.FUNDFLOW"
   },
   {
     "text": "系统配置",

@@ -230,10 +230,10 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         resolve: helper.resolveFor('angularFileUpload', 'filestyle')   
     })
 
-    .state('app.xxbRechargeRecords', {
-        url: '/xxbRechargeRecords',
+    .state('app.fundFlow', {
+        url: '/fundFlow',
         title: '充值记录',
-        templateUrl: helper.basepath('xxbRechargeRecords.html')
+        templateUrl: helper.basepath('fundFlow.html')
     })
 
     .state('app.adminInfo', {
@@ -686,10 +686,123 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
       
       getCountData();
 
+      $scope.version = '';
+      try {
+          var judgeVer = (function(newVersion) {
+            
+                //打开或新建一个数据库 数据库名 版本号 数据库描述 数据库大小 回调函数（可选）
+                var versionDB = openDatabase("version", "1.0", "web版本号存储", "1024*1024", function () {});
+                //对数据库进行事务处理
+                versionDB.transaction(function (tx) {
+                    //创建表
+                    //tx这里代表transaction对象 调用对象下的executeSql函数执行SQL语句
+                    //这里有3个参数  SQL语句 成功的回调函数（可选） 失败的回调函数（可选）
+                    tx.executeSql(
+                        'CREATE TABLE IF NOT EXISTS version (id REAL UNIQUE, versionNumber TEXT)', [], 
+                        function () {
+                            // alert("表创建成功");
+                        },
+                        function () {
+                            // alert("表创建失败");
+                        }
+                    );	
+
+                    //增加数据
+                    tx.executeSql(
+                        'INSERT INTO version (id, versionNumber) VALUES (?, ?)', [1, "v16.9.12.0.1beta"],
+                        function () {
+                            // alert("数据增加成功");
+                        },
+                        function () {
+                            // alert("数据增加失败");
+                        }
+                    );
+                    
+                    //修改数据
+                    tx.executeSql(
+                        'UPDATE version SET VERSIONNUMBER = ? WHERE ID = ?', [newVersion, 1], 
+                        function () {
+                            // alert("数据修改成功");
+                        },
+                        function () {
+                            // alert("数据修改失败");
+                        }
+                    );
+                    
+                    //查询数据
+                    tx.executeSql(
+                        'SELECT * FROM version', [],
+                        function (tx, result) {
+                            for(var i = 0; i < result.rows.length; i++) {
+                                $scope.version = result.rows.item(i)["versionNumber"];
+                            }
+
+                            // 判断版本号是否相同
+                            if($scope.version === $rootScope.v) {}
+                            else {
+                                ngDialog.open({
+                                    template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
+                                                "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                                                    "<p style='margin-bottom:20px;'>1：新增锁定分校功能。</p>"+
+                                                    "<p style='margin-bottom:20px;'>2：总校可以自行更改密码啦！</p>"+
+                                                    "<p style='margin-bottom:20px;'>3：新增为分校充值学习币功能。</p>"+
+                                                    "<p style='margin-bottom:20px;'>4：修改了商品订单逻辑。</p>"+
+                                                    "<p style='margin-bottom:20px;'>5：支持显示分校的收支情况啦！</p>"+
+                                                    "<p style='margin-bottom:20px;'>6：修改了APP广告位的跳转方式。</p>"+
+                                                    "<p style='margin-bottom:20px;'>7：优化了若干影响用户体验的细节。</p>"+
+                                                    "<p style='margin-bottom:20px;'>8：新增了版本更新说明。</p>"+
+                                                    "<p style='margin-bottom:20px;'>9：修复了若干bug。</p>"+
+                                                "</div>",
+                                    plain: true,
+                                    className: 'ngdialog-theme-default'
+                                });
+                                localStorage.setItem('v', $scope.version);
+                                $rootScope.v = localStorage.v;
+                            }
+                        },
+                        function () {
+                            // alert("数据查询失败");
+                        }
+                    );
+
+                    // //删除数据
+                    // tx.executeSql(
+                    //     'DELETE FROM version WHERE ID = ?', [1],
+                    //     function () {
+                    //         alert("数据删除成功");
+                    //     },
+                    //     function () {
+                    //         alert("数据删除失败");
+                    //     }
+                    // );           
+                })
+          })('v16.9.12.0.5beta');
+      }catch (e){
+          console.log('该浏览器不支持websql，无法使用版本说明功能！');
+          return;
+      }
       // noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
 }]);
+
+
+
+/**=========================================================
+ * welcomeController
+ * author: BGOnline
+ * version 1.0 2016-6-21
+ =========================================================*/
+App.controller('welcomeController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+
+    if(localStorage.v == 'undefined' || localStorage.v == undefined) {
+        $rootScope.v = "v16.7.11.0.1beta";
+    }else {
+        $rootScope.v = localStorage.v;
+    }
+
+}]);
+
 
 
 
@@ -819,7 +932,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
       errorJump($state);
       var listLoading = $('.list-loading');
       
-      getCourseData = function(sortid, cp) { // 获取课程
+      getCourseData = function(cp) { // 获取课程
 
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
 
@@ -986,6 +1099,7 @@ App.controller('courseMngtController', ['$scope', '$rootScope', '$http', '$filte
                             getCourseData();
                             getCourseClass();
                             $('.rdClassNameBtn').removeClass('open');
+                            ngDialog.close();
                         }
                     }, function(x) { 
                       listLoading.css({'display':'none'});
@@ -1106,7 +1220,7 @@ App.controller('commodityClassController', ['$scope', 'ngDialog', '$rootScope', 
           sessionStorage.setItem('sname', sname);
           sessionStorage.setItem('sortid', sortid);
           // $('.class-name').html(sname);
-          getCommodityData(sortid);
+          getCommodityData();
           nowClassName(i+1)
           judgeClassName();
       }
@@ -1174,7 +1288,7 @@ App.controller('commodityListController', ['$scope', '$rootScope', '$http', '$fi
       var listLoading = $('.list-loading');
       
       getCommodityData = function(cp, s) { // 获取商品
-
+          
           cp ? $scope.currentPage = cp + 1 : $scope.currentPage = 1;
 
           listLoading.css({'display':'block'});
@@ -1621,6 +1735,137 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
       //timeoutLock($state);
 }]);
 
+/**=========================================================
+ * fundFlowController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('fundFlowController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      $scope.orderBranchName = sessionStorage.orderBranchName;
+      $scope.crumbsBranchid = sessionStorage.orderBranchid;
+      var getOrderListData = function(cp, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/branch/rechargelog', {
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.sOLValue != undefined && sessionStorage.sOLValue != 'undefined' ? sessionStorage.sOLValue : '', 
+                time: t, 
+                type: sessionStorage.orderState,
+                branch_name: sessionStorage.orderBranchName
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.orderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.orderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+                    if($scope.orderBranchName) {
+                        $('.removeBranchid').css({'visibility':'visible'})
+                    }else {
+                        $('.removeBranchid').css({'visibility':'hidden'})
+                    }
+              }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getOrderListData();
+
+      $scope.pageChanged = function() {
+          getOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+      
+      $scope.showRechargeTime = function(t) {
+          getOrderListData('', t, '');
+      }
+
+      $scope.types = [
+          {value: 1, class: 'label-success', text: '收入'},
+          {value: 2, class: 'label-danger', text: '支出'}
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.type) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.type) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $('.crumbs').click(function() {
+        	if($scope.crumbsBranchid) {
+              sessionStorage.setItem('atTheBranchid', $scope.crumbsBranchid);
+              $state.go('app.atTheDetails');
+          }else {
+              $state.go('app.atTheMngt');
+          }
+      })
+
+      $('.removeBranchid').click(function() {
+          sessionStorage.removeItem('atTheBranchid');
+          sessionStorage.removeItem('orderBranchName');
+          getOrderListData();
+          $scope.orderBranchName = sessionStorage.orderBranchName;
+          $scope.crumbsBranchid = sessionStorage.atTheBranchid;
+      })
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('sOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.orderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('orderState', value);
+          sessionStorage.setItem('orderText', text);
+          getOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
 
 /**=========================================================
  * commodityOrderController
@@ -1636,7 +1881,7 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       getCommodityOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
           $http
-            .post(''+url+'/list/goods_order', {
+            .post(''+url+'/suppliesorder/order_list', {
                 token: sessionStorage.token, 
                 p: cp, 
                 search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
@@ -1691,9 +1936,11 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 2, class: 'label-primary', text: '待发货'},
+          {value: 1, class: 'label-default', text: '未支付'},
+          {value: 2, class: 'label-primary', text: '已支付'},
           {value: 3, class: 'label-warning', text: '配送中'},
           {value: 4, class: 'label-success', text: '已完成'},
+          {value: 99, class: 'label-success', text: '线下支付待审核'},
       ];
       
       $scope.orderStatusClass = function(x) {
@@ -3087,6 +3334,11 @@ App.controller('atTheDetailsController', ['$scope', '$rootScope', '$http', '$fil
                 sessionStorage.setItem('orderBranchName', sessionStorage.atTheName);
                 sessionStorage.setItem('orderBranchid', sessionStorage.atTheBranchid);
                 $state.go('app.orderList');
+                break;
+              case 4:
+                sessionStorage.setItem('orderBranchName', sessionStorage.atTheName);
+                sessionStorage.setItem('orderBranchid', sessionStorage.atTheBranchid);
+                $state.go('app.fundFlow');
                 break;
           }
           

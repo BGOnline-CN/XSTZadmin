@@ -18,12 +18,12 @@
       "ATTHECOURSE": "课程查看",
       "ATTHEMNGT": "分校管理",
       "ORDERLIST": "课程订单",
-      "USERSLIST": "家长列表",
+      "USERSLIST": "用户列表",
       "TEACHERSLIST": "教师列表",
       "USERFEEDBACK": "用户反馈",
       "COMMODITYLIST": "商品管理",
       "COMMODITYORDER": "商品订单",
-      "XXBRECHARGERECORDS": "充值记录",
+      "FUNDFLOW": "分校收支",
       "SETUP": "系统配置"
     }
   }

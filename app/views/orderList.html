@@ -15,9 +15,9 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-         <div class="col-lg-4">
+         <div class="col-lg-6">
             当前校区：<a href="" class="crumbs" name="{{crumbsBranchid}}">{{orderBranchName ? orderBranchName : '全部校区'}}</a><i class="fa fa-close removeBranchid"></i>
-            <span class="panel-table-title" style="vertical-align: bottom;">课程订单（{{showTotalItems}}）</span>
+            <span class="panel-table-title">课程订单（{{showTotalItems}}）</span>
             <select class="bg-select" ng-change="showRechargeTime(time)" ng-model="time">
                 <option value="">全部</option>
                 <option value="a">最近一周</option>
@@ -25,7 +25,7 @@
                 <option value="c">最近三个月</option>
             </select>
          </div>
-         <div class="col-lg-4"></div>
+         <div class="col-lg-2"></div>
          <div class="col-lg-4">
              <div class="input-group" style="width: 200px;float:right;">
                 <input type="text" placeholder="{{searchResult != undefined && searchResult != 'undefined' && searchResult ? searchResult : '全部'}}" class="input-sm form-control" ng-model="sOLValue"/>
@@ -56,7 +56,7 @@
                     <th style="width:5%;">单价</th>
                     <th style="width:20%;">支付方式</th>
                     <th style="width:13%;">下单时间</th>
-                    <th style="width:7%;position:relative">
+                    <th style="width:7%;position:relative;">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
                         <i class="fa fa-angle-down downListIco"></i>
                         <ul class="downList clearfix">

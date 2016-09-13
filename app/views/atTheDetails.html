@@ -40,13 +40,12 @@
                     <div class="h2 mt0">{{count.user_parent_count}}
                         <small style="font-size: 12px">人</small>
                     </div>
-                    <div class="text-uppercase">家长数量</div>
+                    <div class="text-uppercase">用户数量</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <!-- START widget-->
+        <!--<div class="col-lg-3 col-md-6 col-sm-12">
             <div class="panel widget bg-green">
                 <div class="row row-table bg-count">
                     <div class="col-xs-4 text-center bg-green-dark pv-lg">
@@ -60,22 +59,35 @@
                     </div>
                 </div>
             </div>
+        </div>-->
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- START widget-->
+            <div class="panel widget bg-green">
+                <div class="row row-table bg-count" ng-click="goCountList(3)">
+                    <div class="col-xs-4 text-center bg-green-dark pv-lg">
+                    <em class="icon-basket-loaded fa-3x"></em>
+                    </div>
+                    <div class="col-xs-8 pv-lg">
+                    <div class="h2 mt0" style="display: inline-block;">{{count.course_order_total_price}}
+                        <small style="font-size: 12px">元</small>
+                    </div>
+                    <div class="text-uppercase">课程订单</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <!-- START widget-->
             <div class="panel widget bg-info">
-                <div class="row row-table bg-count" ng-click="goCountList(3)">
+                <div class="row row-table bg-count" ng-click="goCountList(4)">
                     <div class="col-xs-4 text-center bg-info-dark pv-lg">
-                    <em class="icon-basket-loaded fa-3x"></em>
+                    <em class="fa fa-cny fa-3x"></em>
                     </div>
                     <div class="col-xs-8 pv-lg">
-                    <!--<div class="h2 mt0" style="display: inline-block;">{{count.course_order_count}}
-                        <small style="font-size: 12px">笔</small>
-                    </div>-->
-                    <div class="h2 mt0" style="display: inline-block;">{{count.course_order_total_price}}
+                    <div class="h2 mt0" style="display: inline-block;">{{atTheDetailsData.xxb}}
                         <small style="font-size: 12px">元</small>
                     </div>
-                    <div class="text-uppercase">营业额</div>
+                    <div class="text-uppercase">资金池</div>
                     </div>
                 </div>
             </div>

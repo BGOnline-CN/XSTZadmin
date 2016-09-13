@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url(//fonts.useso.com/css?family=Source+Sans+Pro:300,400,600,400italic);
+/*@import url(//fonts.useso.com/css?family=Source+Sans+Pro:300,400,600,400italic);*/
 /*!
  * 
  * Angle - Bootstrap Admin App + AngularJS
@@ -11093,6 +11093,7 @@ flatdoc .button .badge {
 .courseList > a > img {
     width: 100%;
     height: 60%;
+    display: block;
 }
 .courseList > a.dashed {
     border: 2px dashed #DADADA;
@@ -11459,7 +11460,6 @@ flatdoc .button .badge {
   display: block;
 }
 .bg-select {
-  vertical-align: text-top;
   font-size: 14px;
   color: #555;
   border: 1px solid #ddd;
