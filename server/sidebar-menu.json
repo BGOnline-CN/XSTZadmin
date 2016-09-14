@@ -71,6 +71,12 @@
     "translate": "sidebar.nav.FUNDFLOW"
   },
   {
+    "text": "提现管理",
+    "sref": "app.withdrawMngt",
+    "icon": "fa fa-money",
+    "translate": "sidebar.nav.WITHDRAWMNGT"
+  },
+  {
     "text": "系统配置",
     "sref": "app.setUp",
     "icon": "fa fa-cogs",

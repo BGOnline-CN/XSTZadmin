@@ -10,12 +10,12 @@ if (typeof $ === 'undefined') { throw new Error('This application\'s JavaScript 
 
 
 // 全局
-// var url = 'http://xiaoshutong.thinktorch.cn/backend/web'; // API
-// var rootUrl = 'http://xiaoshutong.thinktorch.cn';
+var url = 'http://xiaoshutong.thinktorch.cn/backend/web'; // API
+var rootUrl = 'http://xiaoshutong.thinktorch.cn';
 // var url = 'http://192.168.1.200/xst/backend/web'; // API
 // var rootUrl = 'http://192.168.1.200/xst';
-var url = 'http://testketangwai.thinktorch.cn/backend/web'; // API
-var rootUrl = 'http://testketangwai.thinktorch.cn/';
+// var url = 'http://testketangwai.thinktorch.cn/backend/web'; // API
+// var rootUrl = 'http://testketangwai.thinktorch.cn/';
 var noF5speed = 5; // 无刷新获取数据的速度 秒
 var getDataSpeed = 1000 * noF5speed; // 无刷新获取数据的速度
 var lockCountInit = 0; // 锁屏计数器初始化
@@ -234,8 +234,14 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
     .state('app.fundFlow', {
         url: '/fundFlow',
-        title: '充值记录',
+        title: '分校收支',
         templateUrl: helper.basepath('fundFlow.html')
+    })
+
+    .state('app.withdrawMngt', {
+        url: '/withdrawMngt',
+        title: '提现管理',
+        templateUrl: helper.basepath('withdrawMngt.html')
     })
 
     .state('app.adminInfo', {
@@ -2019,11 +2025,11 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       }
       
 
-      $scope.sendCommodity = function(g, o) { // 发货
+      $scope.sendCommodity = function(o) { // 发货
           ngDialog.open({
             template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
                       "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                          "<p style='margin-bottom:20px;'><span>商品名："+g+"</span><span style='float:right;'>订单号："+o+"</span></p>"+
+                          "<p style='margin-bottom:20px;'><span>订单号："+o+"</span></p>"+
                           "<span style='float:left;line-height: 35px;'>填写发货信息</span>"+
                           "<input class='form-control xxb-input' type='text' ng-model='payMsg'>"+
                           '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
@@ -2038,24 +2044,189 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       //timeoutLock($state);
 }]);
 
+
+
 /**=========================================================
- * payMsgController
+ * withdrawMngtController
+ * author: BGOnline
+ * version 1.0 2016-6-17
+ =========================================================*/
+ 
+App.controller('withdrawMngtController', ['$scope', '$sce', '$rootScope', '$http', '$filter', '$state', 'ngDialog',
+  function($scope, $sce, $rootScope, $http, $filter, $state, ngDialog) {
+      
+      errorJump($state);
+      var listLoading = $('.list-loading');
+      getCommodityOrderListData = function(cp, t, st) {
+          listLoading.css({'display':'block'});
+          $http
+            .post(''+url+'/branch/apply_list', {
+                token: sessionStorage.token, 
+                p: cp, 
+                search: sessionStorage.CSOLValue != undefined && sessionStorage.CSOLValue != 'undefined' ? sessionStorage.CSOLValue : '', 
+                time: t, 
+                status: sessionStorage.cOrderState
+            })
+            .then(function(response) {
+                listLoading.css({'display':'none'});
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }
+                else{ 
+                    $scope.commodityOrderData = response.data.data.mod_data; 
+                    var page = response.data.data.page_data;
+                    $scope.showTotalItems = page.totalCount;
+                    $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
+                    $scope.commodityOrderData.length > 0 ? $scope.ONullType = 'isNullTypeHidden' : $scope.ONullType = 'isNullTypeShow';
+              }
+            }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      };
+      
+      getCommodityOrderListData();
+
+      $scope.pageChanged = function() {
+          getCommodityOrderListData($scope.currentPage - 1);
+      };
+      $scope.maxSize = 5; // 最多显示5页
+
+      $scope.payTime = function(o) {
+          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+      }
+
+      $scope.sexs = [
+          {value: 0, text: '保密'},
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+      ];
+      
+      $scope.showSex = function(x) {
+          if(x.sex) {
+              selected = $filter('filter')($scope.sexs, {value: x.sex});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+      $scope.types = [
+          {value: 0, class: 'label-default', text: '已取消'},
+          {value: 1, class: 'label-default', text: '待审核'},
+          {value: 2, class: 'label-primary', text: '提现失败'},
+          {value: 3, class: 'label-warning', text: '提现成功'}
+      ];
+      
+      $scope.orderStatusClass = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].class : 'Not set';
+      };
+      
+      $scope.orderStatusText = function(x) {
+          if(x.status) {
+              selected = $filter('filter')($scope.types, {value: x.status});
+          }
+          return selected.length ? selected[0].text : 'Not set';
+      };
+
+
+      $scope.searchResult = sessionStorage.sOLValue;
+      $scope.searchListData = function() {
+          sessionStorage.setItem('CSOLValue', $scope.sOLValue);
+          $scope.searchResult = $scope.sOLValue;
+          getCommodityOrderListData();
+      }
+
+      $scope.selectValue = sessionStorage.cOrderText;
+      $scope.downSValue = function(value, text) {
+          sessionStorage.setItem('cOrderState', value);
+          sessionStorage.setItem('cOrderText', text);
+          getCommodityOrderListData();
+          $scope.selectValue = text;
+          $('.downList').css({'visibility':'hidden'});
+      }
+
+      $('.downListIco').click(function() {
+          if($('.downList').css('visibility') == 'visible') {
+              $('.downList').css({'visibility':'hidden'});
+          }else {
+              $('.downList').css({'visibility':'visible'});
+          }
+      })
+      
+      $scope.showRechargeTime = function(t) {
+          getCommodityOrderListData('', t, '');
+      }
+
+      $scope.cancelOrder = function(g, o) { //取消订单
+          ngDialog.open({
+            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
+                      "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"</span></p>"+
+                          "<span style='float:left;line-height: 35px;'>拒绝原因</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='cancelMsg'>"+
+                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
+                      "</div>",
+            plain: true,
+            className: 'ngdialog-theme-default',
+            controller: 'withdrawController'
+        });
+      }
+      
+
+      $scope.sendCommodity = function(g, o) { // 发货
+          ngDialog.open({
+            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
+                      "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
+                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"</span></p>"+
+                          "<p style='margin-bottom:20px;'><span>支付方式：</span>"+
+                            "<span class='label label-default packageRadio' ng-repeat='p in payMent' ng-click='selectpRadio($index, id)' style='padding:6px;margin-right:5px;cursor:pointer;'>{{p.name}}</span>"+
+                          "</p>"+
+                          "<span style='float:left;line-height: 35px;'>支付备注</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='payMsg'>"+
+                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
+                      "</div>",
+            plain: true,
+            className: 'ngdialog-theme-default',
+            controller: 'withdrawController'
+        });
+      }
+      //noRefreshGetData(getUserData, getDataSpeed);
+      
+      //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * withdrawController
  * author: BGOnline
  * version 1.0 2016-6-2
  =========================================================*/
  
-App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
+App.controller('withdrawController', ['$scope', '$http', '$state', 'ngDialog',
   function($scope, $http, $state, ngDialog) {
       
       errorJump($state);
       
+      $scope.payMent = [
+        {id: 1, name: '支付宝'},
+        {id: 2, name: '微信'},
+        {id: 3, name: '银行卡'},
+        {id: 4, name: '其他'}
+      ]
+
       $scope.payMsg = '';
       $scope.sendPayMsg = function(o) {
           
           if($scope.payMsg.trim()) {
             $http
-            .post(''+url+'/list/goods_order_edit', {
-                token: sessionStorage.token, order_id: o, status: 3, pay_msg: $scope.payMsg
+            .post(''+url+'/suppliesorder/send_supplies', {
+                token: sessionStorage.token, order_id: o, pay_msg: $scope.payMsg
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
@@ -2090,6 +2261,59 @@ App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
 
 }]);
 
+
+
+/**=========================================================
+ * payMsgController
+ * author: BGOnline
+ * version 1.0 2016-6-2
+ =========================================================*/
+ 
+App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
+  function($scope, $http, $state, ngDialog) {
+      
+      errorJump($state);
+      
+      $scope.payMsg = '';
+      $scope.sendPayMsg = function(o) {
+          
+          if($scope.payMsg.trim()) {
+            $http
+            .post(''+url+'/suppliesorder/send_supplies', {
+                token: sessionStorage.token, order_id: o, pay_msg: $scope.payMsg
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    ngDialog.close();
+                    getCommodityOrderListData();
+                }
+            }, function(x) {
+                ngDialog.open({
+                  template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                  plain: true,
+                  className: 'ngdialog-theme-default'
+                });
+                ngDialog.close();
+            });
+          }else {
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>请填写发货信息！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+          }
+          
+      }
+
+}]);
 
 
 

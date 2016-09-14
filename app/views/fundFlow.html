@@ -53,13 +53,13 @@
                     <th style="width:8%;">校区联系人</th>
                     <th style="width:10%;">校区电话</th>
                     <th style="width:8%;">校区余额</th>
-                    <th style="width:26%;">交易说明</th>
+                    <th style="width:28%;">交易说明</th>
                     <th style="width:15%;">交易时间</th>
-                    <th style="width:8%;position:relative;">
-                        {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有类型'}}
+                    <th style="width:6%;position:relative;">
+                        {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
                         <i class="fa fa-angle-down downListIco"></i>
                         <ul class="downList clearfix">
-                            <li ng-click="downSValue('')">所有类型</li>
+                            <li ng-click="downSValue('')">所有</li>
                             <li ng-click="downSValue(s.value, s.text)" name="{{s.value}}" ng-repeat="s in types" ng-bind="s.text"></li>
                         </ul>
                     </th>

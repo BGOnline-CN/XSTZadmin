@@ -24,6 +24,7 @@
       "COMMODITYLIST": "商品管理",
       "COMMODITYORDER": "商品订单",
       "FUNDFLOW": "分校收支",
+      "WITHDRAWMNGT": "提现管理",
       "SETUP": "系统配置"
     }
   }
