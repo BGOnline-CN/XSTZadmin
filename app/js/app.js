@@ -1926,7 +1926,7 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
       $scope.maxSize = 5; // 最多显示5页
 
       $scope.payTime = function(o) {
-          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
 
       $scope.sexs = [

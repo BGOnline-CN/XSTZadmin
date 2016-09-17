@@ -11738,3 +11738,9 @@ flatdoc .button .badge {
     position: relative;
   }
 }
+.orderBorderBottom {
+  border-bottom: 1px solid #eee;
+}
+.orderBorderBottom:last-child {
+  border: 0;
+}
