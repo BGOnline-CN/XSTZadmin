@@ -1610,7 +1610,7 @@ App.controller('orderListController', ['$scope', '$sce', '$rootScope', '$http', 
       errorJump($state);
       var listLoading = $('.list-loading');
       $scope.orderBranchName = sessionStorage.orderBranchName;
-      $scope.crumbsBranchid = sessionStorage.orderBranchid;
+      // $scope.crumbsBranchid = sessionStorage.orderBranchid;
       var getOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
           $http
@@ -1755,7 +1755,7 @@ App.controller('fundFlowController', ['$scope', '$sce', '$rootScope', '$http', '
       errorJump($state);
       var listLoading = $('.list-loading');
       $scope.orderBranchName = sessionStorage.orderBranchName;
-      $scope.crumbsBranchid = sessionStorage.orderBranchid;
+      // $scope.crumbsBranchid = sessionStorage.orderBranchid;
       var getOrderListData = function(cp, t, st) {
           listLoading.css({'display':'block'});
           $http
@@ -2367,7 +2367,7 @@ App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', 
       errorJump($state);
       var listLoading = $('.list-loading');
       $scope.userBranchName = sessionStorage.userBranchName;
-      $scope.crumbsBranchid = sessionStorage.userBranchid;
+      // $scope.crumbsBranchid = sessionStorage.userBranchid;
       var getUsersListData = function(cp) {
           listLoading.css({'display':'block'});
           $http
@@ -2477,7 +2477,7 @@ App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http
       errorJump($state);
       var listLoading = $('.list-loading');
       $scope.teacherBranchName = sessionStorage.teacherBranchName;
-      $scope.crumbsBranchid = sessionStorage.teacherBranchid;
+      // $scope.crumbsBranchid = sessionStorage.teacherBranchid;
       var getTeachersListData = function(cp) {
           listLoading.css({'display':'block'});
           $http
