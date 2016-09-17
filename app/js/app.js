@@ -1944,11 +1944,11 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 1, class: 'label-default', text: '未支付'},
+          {value: 1, class: 'label-danger', text: '未支付'},
           {value: 2, class: 'label-primary', text: '已支付'},
           {value: 3, class: 'label-warning', text: '配送中'},
           {value: 4, class: 'label-success', text: '已完成'},
-          {value: 99, class: 'label-success', text: '线下支付待审核'},
+          {value: 99, class: 'label-info', text: '线下支付待审核'},
       ];
       
       $scope.orderStatusClass = function(x) {
@@ -2038,6 +2038,34 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
             className: 'ngdialog-theme-default',
             controller: 'payMsgController'
         });
+      }
+
+      $scope.surePay = function(o) {
+          if(confirm('请确认分校已完成支付？')) {
+            $http
+              .post(''+url+'/suppliesorder/confirmpay', {
+                  token: sessionStorage.token, order_id: o
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }
+                  else{ 
+                    ngDialog.open({
+                      template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                      plain: true,
+                      className: 'ngdialog-theme-default'
+                    });
+                    getCommodityOrderListData();
+                }
+              }, function(x) { 
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              });
+          }
       }
       //noRefreshGetData(getUserData, getDataSpeed);
       
