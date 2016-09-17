@@ -1816,14 +1816,14 @@ App.controller('fundFlowController', ['$scope', '$sce', '$rootScope', '$http', '
       
       $scope.orderStatusClass = function(x) {
           if(x.type) {
-              selected = $filter('filter')($scope.types, {value: x.status});
+              selected = $filter('filter')($scope.types, {value: x.type});
           }
           return selected.length ? selected[0].class : 'Not set';
       };
       
       $scope.orderStatusText = function(x) {
           if(x.type) {
-              selected = $filter('filter')($scope.types, {value: x.status});
+              selected = $filter('filter')($scope.types, {value: x.type});
           }
           return selected.length ? selected[0].text : 'Not set';
       };
@@ -2097,7 +2097,7 @@ App.controller('withdrawMngtController', ['$scope', '$sce', '$rootScope', '$http
       $scope.maxSize = 5; // 最多显示5页
 
       $scope.payTime = function(o) {
-          return localData = new Date(parseInt(o.pay_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          return localData = new Date(parseInt(o.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
       }
 
       $scope.sexs = [
@@ -2115,9 +2115,9 @@ App.controller('withdrawMngtController', ['$scope', '$sce', '$rootScope', '$http
 
       $scope.types = [
           {value: 0, class: 'label-default', text: '已取消'},
-          {value: 1, class: 'label-default', text: '待审核'},
-          {value: 2, class: 'label-primary', text: '提现失败'},
-          {value: 3, class: 'label-warning', text: '提现成功'}
+          {value: 1, class: 'label-warning', text: '待审核'},
+          {value: 3, class: 'label-danger', text: '提现失败'},
+          {value: 2, class: 'label-primary', text: '提现成功'}
       ];
       
       $scope.orderStatusClass = function(x) {
@@ -2163,14 +2163,14 @@ App.controller('withdrawMngtController', ['$scope', '$sce', '$rootScope', '$http
           getCommodityOrderListData('', t, '');
       }
 
-      $scope.cancelOrder = function(g, o) { //取消订单
+      $scope.cancelOrder = function(g, o, w) { //取消订单
           ngDialog.open({
-            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
+            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写拒绝原因</p>"+
                       "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"</span></p>"+
-                          "<span style='float:left;line-height: 35px;'>拒绝原因</span>"+
-                          "<input class='form-control xxb-input' type='text' ng-model='cancelMsg'>"+
-                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
+                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"元</span></p>"+
+                          "<span style='float:left;line-height: 35px;'>拒绝原因：</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='msg'>"+
+                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+3+'\',\''+w+'\')" style="float:right;margin-top:30px;">确定</button>'+
                       "</div>",
             plain: true,
             className: 'ngdialog-theme-default',
@@ -2179,17 +2179,17 @@ App.controller('withdrawMngtController', ['$scope', '$sce', '$rootScope', '$http
       }
       
 
-      $scope.sendCommodity = function(g, o) { // 发货
+      $scope.sendCommodity = function(g, o, w) { // 通过提现申请
           ngDialog.open({
-            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
+            template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>选择提现方式</p>"+
                       "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"</span></p>"+
+                          "<p style='margin-bottom:20px;'><span>流水号："+o+"</span><span style='float:right;'>金额："+g+"元</span></p>"+
                           "<p style='margin-bottom:20px;'><span>支付方式：</span>"+
-                            "<span class='label label-default packageRadio' ng-repeat='p in payMent' ng-click='selectpRadio($index, id)' style='padding:6px;margin-right:5px;cursor:pointer;'>{{p.name}}</span>"+
+                            "<span class='label label-default packageRadio' ng-repeat='p in payMent' ng-click='selectpRadio($index, p.id)' style='padding:6px;margin-right:5px;cursor:pointer;'>{{p.name}}</span>"+
                           "</p>"+
-                          "<span style='float:left;line-height: 35px;'>支付备注</span>"+
-                          "<input class='form-control xxb-input' type='text' ng-model='payMsg'>"+
-                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
+                          "<span style='float:left;line-height: 35px;'>支付备注：</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='msg'>"+
+                          '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+2+'\',\''+w+'\')" style="float:right;margin-top:30px;">确定</button>'+
                       "</div>",
             plain: true,
             className: 'ngdialog-theme-default',
@@ -2220,18 +2220,22 @@ App.controller('withdrawController', ['$scope', '$http', '$state', 'ngDialog',
         {id: 4, name: '其他'}
       ]
 
-      $scope.payMsg = '';
-      $scope.sendPayMsg = function(o) {
+      $scope.msg = '';
+      $scope.sendPayMsg = function(s, w) {
           
-          if($scope.payMsg.trim()) {
+          if($scope.msg.trim()) {
             $http
-            .post(''+url+'/suppliesorder/send_supplies', {
-                token: sessionStorage.token, order_id: o, pay_msg: $scope.payMsg
+            .post(''+url+'/branch/apply_edit', {
+                token: sessionStorage.token, 
+                withdraw_id: w, 
+                msg: $scope.msg, 
+                pay_type: $scope.payType,
+                status: s
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }else{ 
+                }else { 
                     ngDialog.open({
                       template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,
@@ -2250,13 +2254,19 @@ App.controller('withdrawController', ['$scope', '$http', '$state', 'ngDialog',
             });
           }else {
               ngDialog.open({
-                template: "<p style='text-align:center;margin: 0;'>请填写发货信息！</p>",
+                template: "<p style='text-align:center;margin: 0;'>请说明原因！</p>",
                 plain: true,
                 className: 'ngdialog-theme-default'
               });
               ngDialog.close();
           }
           
+      }
+      
+      $scope.selectpRadio = function(_index, paymentId) { // 按条件排序
+        $('.packageRadio').removeClass('label-warning');
+        $('.packageRadio').eq(_index).addClass('label-warning');
+        $scope.payType = paymentId;
       }
 
 }]);
@@ -2280,12 +2290,12 @@ App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
           if($scope.payMsg.trim()) {
             $http
             .post(''+url+'/suppliesorder/send_supplies', {
-                token: sessionStorage.token, order_id: o, pay_msg: $scope.payMsg
+                token: sessionStorage.token, order_id: o, msg: $scope.payMsg
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
                     requestError(response, $state, ngDialog);
-                }else{ 
+                }else { 
                     ngDialog.open({
                       template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
                       plain: true,

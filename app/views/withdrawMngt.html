@@ -47,13 +47,13 @@
             <thead>
                 <tr>
                     <th style="width:10%;">流水号</th>
-                    <th style="width:15%;">订购校区</th>
-                    <th style="width:6%;">负责人</th>
+                    <th style="width:16%;">订购校区</th>
+                    <th style="width:8%;">负责人</th>
                     <th style="width:8%;">电话</th>
                     <th style="width:5%;">金额</th>
                     <th style="width:14%;">备注</th>
                     <th style="width:15%;">支付详情</th>
-                    <th style="width:10%;">申请时间</th>
+                    <th style="width:7%;">申请时间</th>
                     <th style="width:9%;position:relative">
                         {{selectValue != 'undefined' && selectValue != undefined && selectValue ? selectValue : '所有'}}
                         <i class="fa fa-angle-down downListIco"></i>
@@ -72,17 +72,17 @@
                 <tr ng-repeat="o in commodityOrderData">
                     <td ng-bind="o.xxbwithdrawsn"></td>
                     <td ng-bind="o.branch_name"></td>
-                    <td ng-bind="o.tname"></td>
-                    <td ng-bind="o.phone"></td>
-                    <td ng-bind="o.xxb"></td>
+                    <td ng-bind="o.branch_tname"></td>
+                    <td ng-bind="o.branch_phone"></td>
+                    <td ng-bind="o.xxb+'元'"></td>
                     <td ng-bind='o.msg'></td>
                     <td ng-bind='o.pay_msg'></td>
                     <td ng-bind="payTime(o)"></td>
                     <td><div class="label status" ng-class="orderStatusClass(o)" ng-bind="orderStatusText(o)"></div></td>
                     <td>
                         <p class="statusAction" ng-if="orderStatusText(o) == '待审核'">
-                            <a href="" ng-click="sendCommodity(o.xxb, o.xxbwithdrawsn)">通过</a>
-                            <a href="" ng-click="cancelOrder(o.xxb, o.xxbwithdrawsn)">拒绝</a>
+                            <a href="" ng-click="sendCommodity(o.xxb, o.xxbwithdrawsn, o.withdraw_id)">通过</a>
+                            <a href="" ng-click="cancelOrder(o.xxb, o.xxbwithdrawsn, o.withdraw_id)">拒绝</a>
                         </p>
                         <p class="statusAction" ng-if="orderStatusText(o) == '已取消' || orderStatusText(o) == '提现成功' || orderStatusText(o) == '提现失败'">
                             <span class="noAction">不可操作</span>
