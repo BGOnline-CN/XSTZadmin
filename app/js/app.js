@@ -843,7 +843,6 @@ App.controller('courseClassController', ['$scope', 'ngDialog', '$rootScope', '$h
                 else{ 
                     $rootScope.courseClass = response.data.data;
                     judgeClassName();
-                    nowClassName(i);
                     if(sessionStorage.sname == "undefined" || sessionStorage.sname == undefined) { 
                         $('.course').eq(0).addClass('coureColor');
                     }
