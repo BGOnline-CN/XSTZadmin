@@ -6599,7 +6599,7 @@ App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$h
                                 plain: true,
                                 className: 'ngdialog-theme-default'
                               });
-                              $state.go('app.schoolSurvey');
+                              $state.go('app.setUp');
                           }
                           ngDialog.close();
                       }, function(x) { 
