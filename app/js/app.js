@@ -758,15 +758,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：新增锁定分校功能。</p>"+
-                                                    "<p style='margin-bottom:20px;'>2：总校可以自行更改密码啦！</p>"+
-                                                    "<p style='margin-bottom:20px;'>3：新增为分校充值学习币功能。</p>"+
-                                                    "<p style='margin-bottom:20px;'>4：修改了商品订单逻辑。</p>"+
-                                                    "<p style='margin-bottom:20px;'>5：支持显示分校的收支情况啦！</p>"+
-                                                    "<p style='margin-bottom:20px;'>6：修改了APP广告位的跳转方式。</p>"+
-                                                    "<p style='margin-bottom:20px;'>7：优化了若干影响用户体验的细节。</p>"+
-                                                    "<p style='margin-bottom:20px;'>8：新增了版本更新说明。</p>"+
-                                                    "<p style='margin-bottom:20px;'>9：修复了若干bug。</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：新增隐私协议与服务政策功能。</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -791,7 +783,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-          })('v16.9.17.0.1beta');
+          })('v16.9.23.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
