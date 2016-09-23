@@ -145,6 +145,12 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         templateUrl: helper.basepath('atTheCourseDetails.html')
     })
 
+    .state('app.addSchoolSurvey', {
+        url: '/addSchoolSurvey',
+        title: '关于我们设置',
+        templateUrl: helper.basepath('addSchoolSurvey.html')
+    })
+
     .state('app.atTheMngt', {
         url: '/atTheMngt',
         title: '分校管理',
@@ -6467,6 +6473,215 @@ App.controller('setBannerCtrl', ['$scope', '$http', 'FileUploader', '$state', 'n
     }
     
 }])
+
+
+App.controller('setAboutUSCtrl', ['$scope', '$http', 'FileUploader', '$state', 'ngDialog', function($scope, $http, FileUploader, $state, ngDialog) {
+    
+    errorJump($state);
+    var listLoading = $('.list-loading');
+    
+    var get_fwxy = function() {
+        listLoading.css({'display':'block'});
+        $http
+          .post(''+url+'/faq/get_fwxy', {
+              token: sessionStorage.token
+          })
+          .then(function(response) {
+              if ( response.data.code != 200 ) {
+                  requestError(response, $state, ngDialog);
+              }else { 
+                  $scope.schoolInfoData = response.data.data;
+                  ifrCon = $scope.schoolInfoData.content;
+                  $scope.schoolInfoContent = $sce.trustAsHtml($scope.schoolInfoData.content);
+              }
+              listLoading.css({'display':'none'});
+          }, function(x) { 
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+              ngDialog.close();
+              listLoading.css({'display':'none'});
+          });
+    }
+    
+    get_fwxy();
+
+    var get_yszc = function() {
+        listLoading.css({'display':'block'});
+        $http
+          .post(''+url+'/faq/get_yszc', {
+                token: sessionStorage.token
+          })
+          .then(function(response) {
+              listLoading.css({'display':'none'});
+              if ( response.data.code != 200 ) {
+                  requestError(response, $state, ngDialog);
+              }else {
+                  $scope.teacherInfoData = response.data.data;
+                  ifrCon = $scope.teacherInfoData.content;
+                  $scope.teacherInfoContent = $sce.trustAsHtml($scope.teacherInfoData.content);
+              }
+              ngDialog.close();
+          }, function(x) { 
+              listLoading.css({'display':'none'});
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              }); 
+              ngDialog.close();
+          });
+    }
+
+    get_yszc();
+
+    $scope.createTime = function(create) {
+        if(typeof(create) == 'undefined') return;
+        if(create.add_time) {
+          return localData = new Date(parseInt(create.add_time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+        }else {
+            return '未创建';
+        }
+        
+    }
+    
+    $scope.openEdit = function(type) {
+        switch(type) { 
+            case 1:
+              $state.go('app.addSchoolSurvey');
+              sessionStorage.setItem('schoolSurveyType', type);
+              break;
+            case 2:
+              $state.go('app.addSchoolSurvey');
+              sessionStorage.setItem('schoolSurveyType', type);
+              break;
+        }
+    }
+
+    // clearInterval(noF5Timer);
+    
+    //timeoutLock($state);
+}]);
+
+
+/**=========================================================
+ * addSchoolSurveyController
+ * author: BGOnline
+ * version 1.0 2016-7-26
+ =========================================================*/
+ 
+App.controller('addSchoolSurveyController', ['$rootScope', '$sce', '$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
+  function($rootScope, $sce, $scope, $http, $filter, $state, FileUploader, ngDialog) {
+      errorJump($state);
+      $scope.randomDate = (new Date()).getTime();
+      var listLoading = $('.list-loading');
+
+      var submitData = function(api) {
+          return $scope.addSubmit = function() {
+                    var content = '<html>'+
+                                    '<head>'+
+                                        '<style>'+
+                                            'img {'+
+                                                'width:100% !important;'+
+                                            '}'+
+                                        '</style>'+
+                                    '</head>'+
+                                    '<body>'+
+                                        document.getElementById('iframepage').contentWindow.html +
+                                    '</body>'+
+                                  '</html>'
+                    $http
+                      .post(''+url+api+'', {
+                            token: sessionStorage.token,
+                            content: content
+                      })
+                      .then(function(response) {
+                          if ( response.data.code != 200 ) {
+                              requestError(response, $state, ngDialog);
+                          }
+                          else{ 
+                              ngDialog.open({
+                                template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                                plain: true,
+                                className: 'ngdialog-theme-default'
+                              });
+                              $state.go('app.schoolSurvey');
+                          }
+                          ngDialog.close();
+                      }, function(x) { 
+                          ngDialog.open({
+                            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                            plain: true,
+                            className: 'ngdialog-theme-default'
+                          }); 
+                          ngDialog.close();
+                      });
+                    
+                }
+      }
+
+
+
+      switch(sessionStorage.schoolSurveyType) {
+          case '1':
+            $http
+              .post(''+url+'/faq/get_fwxy', {
+                    token: sessionStorage.token
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }else {
+                      $scope.schoolInfoData = response.data.data;
+                      ifrCon = $scope.schoolInfoData.content;
+                      $scope.schoolInfoContent = $sce.trustAsHtml($scope.schoolInfoData.content);
+                  }
+                  ngDialog.close();
+              }, function(x) {
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  }); 
+                  ngDialog.close();
+              });
+            $scope.editPageTitle = '服务协议';
+            submitData('/faq/edit_fwxy');
+            break;
+          case '2':
+            $http
+              .post(''+url+'/faq/get_yszc', {
+                    token: sessionStorage.token
+              })
+              .then(function(response) {
+                  if ( response.data.code != 200 ) {
+                      requestError(response, $state, ngDialog);
+                  }else {
+                      $scope.teacherInfoData = response.data.data;
+                      ifrCon = $scope.teacherInfoData.content;
+                      $scope.teacherInfoContent = $sce.trustAsHtml($scope.teacherInfoData.content);
+                  }
+                  ngDialog.close();
+              }, function(x) {
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  }); 
+                  ngDialog.close();
+              });
+            $scope.editPageTitle = '隐私政策';
+            submitData('/faq/edit_yszc');
+            break;
+      }
+      
+      // clearInterval(noF5Timer);
+      
+      //timeoutLock($state);
+}]);
+
 
 /**=========================================================
  * Module: form-xeditable.js
