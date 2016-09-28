@@ -666,6 +666,14 @@ var errorJump = (function($state) {
 });
  
 
+/**
+ * 清空sessionStorage.uploadCourseImgUrl
+ */
+var clearUploadCourseImgUrl = (function() {
+    sessionStorage.removeItem('uploadCourseImgUrl');
+});
+
+
 
 /**=========================================================
  * defaultController
@@ -2729,6 +2737,7 @@ App.controller('atTheCourseDetailsController', ['$scope', '$sce', '$rootScope', 
 App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
@@ -2982,6 +2991,7 @@ App.controller('addCustomCourseController', ['$scope', '$http', '$filter', '$sta
 App.controller('addCommodityController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
     
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       parseInt(sessionStorage.sortid) ? $scope.isSortid = false : $scope.isSortid = true;
@@ -3690,6 +3700,7 @@ App.controller('rechargeXXBController', ['$scope', '$http', '$state', 'ngDialog'
 App.controller('addAtTheController', ['$scope', '$http', '$filter', '$state', 'FileUploader', 'ngDialog',
   function($scope, $http, $filter, $state, FileUploader, ngDialog) {
       
+      clearUploadCourseImgUrl();
       errorJump($state);
       var listLoading = $('.list-loading');
       var uploader = $scope.uploader = new FileUploader({
