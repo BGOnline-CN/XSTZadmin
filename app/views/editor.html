@@ -40,7 +40,7 @@
                 
                 var option = [
                     'justifyleft', 'justifycenter', 'justifyright', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                    'italic', 'underline', '|', 'image'
+                    'italic', 'underline', '|', 'multiimage'
                     // , 'hr'
                 ]
                 
@@ -51,7 +51,7 @@
                     resizeType: 0,
                     items: option,
                     filterMode: false,
-                    uploadJson: 'http://xiaoshutong.thinktorch.cn/backend/web/index.php/gd/upload',
+                    uploadJson: 'http://xiaoshutong.thinktorch.cn/backend/web/index.php/gd/uploads',
                     fileManagerJson : 'http://xiaoshutong.thinktorch.cn/backend/web/index.php/gd/filemanager',
                     allowFileManager : true,
                     afterUpload : function(url) {
