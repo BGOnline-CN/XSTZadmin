@@ -766,7 +766,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：新增隐私协议与服务政策功能。</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：自定义文章中可以多图上传啦。</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
