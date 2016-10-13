@@ -766,7 +766,8 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                                 ngDialog.open({
                                     template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>版本更新说明</p>"+
                                                 "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
-                                                    "<p style='margin-bottom:20px;'>1：自定义文章中可以多图上传啦。</p>"+
+                                                    "<p style='margin-bottom:20px;'>1：新增切换家长账号为老师。</p>"+
+                                                    "<p style='margin-bottom:20px;'>2：新增切换老师账号为家长。</p>"+
                                                 "</div>",
                                     plain: true,
                                     className: 'ngdialog-theme-default'
@@ -791,7 +792,7 @@ App.controller('defaultController', ['$scope', '$sce', '$rootScope', '$http', '$
                     //     }
                     // );           
                 })
-          })('v16.9.23.0.1beta');
+          })('v16.10.13.0.1beta');
       }catch (e){
           console.log('该浏览器不支持websql，无法使用版本说明功能！');
           return;
@@ -2463,6 +2464,27 @@ App.controller('usersListController', ['$scope', '$sce', '$rootScope', '$http', 
           getUsersListData();
       }
 
+
+      $scope.asTeacher = function(uid) {
+          $http
+            .post(''+url+'/member/edit', {
+                token: sessionStorage.token, userid: uid, type: 2
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    getUsersListData();
+              }
+            }, function(x) { 
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      }
+
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);
@@ -2561,6 +2583,25 @@ App.controller('teachersListController', ['$scope', '$sce', '$rootScope', '$http
           getTeachersListData();
       }
 
+      $scope.asUser = function(uid) {
+          $http
+            .post(''+url+'/member/edit', {
+                token: sessionStorage.token, userid: uid, type: 1
+            })
+            .then(function(response) {
+                if ( response.data.code != 200 ) {
+                    requestError(response, $state, ngDialog);
+                }else { 
+                    getTeachersListData();
+              }
+            }, function(x) { 
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+            });
+      }
       //noRefreshGetData(getUserData, getDataSpeed);
       
       //timeoutLock($state);

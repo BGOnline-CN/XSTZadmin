@@ -42,18 +42,19 @@
             <thead>
                 <tr>
                     <th style="width:5%;">头像</th>
-                    <th style="width:10%;">姓名</th>
+                    <th style="width:8%;">姓名</th>
                     <th style="width:10%;">电话</th>
-                    <th style="width:15%;">邮箱</th>
+                    <th style="width:13%;">邮箱</th>
                     <th style="width:15%;">所属分校</th>
-                    <th style="width:15%;">签名</th>
-                    <th style="width:15%;">创建时间</th>
-                    <th style="width:15%;">最近登录</th>
+                    <th style="width:18%;">签名</th>
+                    <th style="width:13%;">创建时间</th>
+                    <th style="width:13%;">最近登录</th>
+                    <th style="width:5%;">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td ng-class="TNullType" colspan="8">暂无数据</td>
+                    <td ng-class="TNullType" colspan="9">暂无数据</td>
                 </tr>
                 <tr ng-repeat="t in teacherData">
                     <td>
@@ -68,9 +69,10 @@
                     <td ng-bind="t.summary"></td>
                     <td ng-bind="createTime(t)"></td>
                     <td ng-bind="lastLoginTime(t)"></td>
+                    <td><a ng-click="asUser(t.userid)">设为家长</a></td>
                 </tr>
                 <tr>
-                    <td class="page-td" colspan="8">
+                    <td class="page-td" colspan="9">
                         <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                     </td>
                 </tr>

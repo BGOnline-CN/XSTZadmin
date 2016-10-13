@@ -42,19 +42,20 @@
             <thead>
                 <tr>
                     <th style="width:6%;">头像</th>
-                    <th style="width:6%;">性别</th>
-                    <th style="width:10%;">电话</th>
-                    <th style="width:8%;">学习币</th>
+                    <th style="width:5%;">性别</th>
+                    <th style="width:9%;">电话</th>
+                    <th style="width:7%;">学习币</th>
                     <th style="width:10%;">孩子</th>
                     <th style="width:15%;">所属分校</th>
                     <th style="width:15%;">签名</th>
-                    <th style="width:15%;">创建时间</th>
-                    <th style="width:15%;">最近登录</th>
+                    <th style="width:14%;">创建时间</th>
+                    <th style="width:14%;">最近登录</th>
+                    <th style="width:5%">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td ng-class="UNullType" colspan="9">暂无数据</td>
+                    <td ng-class="UNullType" colspan="10">暂无数据</td>
                 </tr>
                 <tr ng-repeat="u in usersData">
                     <td>
@@ -72,9 +73,10 @@
                     <td ng-bind="u.summary"></td>
                     <td ng-bind="createTime(u)"></td>
                     <td ng-bind="lastLoginTime(u)"></td>
+                    <td><a ng-click="asTeacher(u.userid)">设为老师</a></td>
                 </tr>
                 <tr>
-                    <td class="page-td" colspan="9">
+                    <td class="page-td" colspan="10">
                         <pagination class="pagination-sm" total-items="totalItems" previous-text="上一页" next-text="下一页" first-text="首页" last-text="尾页" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()" boundary-links="true"></pagination>
                     </td>
                 </tr>
