@@ -70,7 +70,7 @@
                         <span ng-repeat="s in u.student" style="margin-right: 5px;">{{s.tname}}</span>
                     </td>
                     <td ng-bind="u.name"></td>
-                    <td ng-bind="u.summary"></td>
+                    <td title="{{u.summary}}">{{u.summary | limitTo:50}}</td>
                     <td ng-bind="createTime(u)"></td>
                     <td ng-bind="lastLoginTime(u)"></td>
                     <td><a ng-click="asTeacher(u.userid)">设为老师</a></td>
