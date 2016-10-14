@@ -3355,6 +3355,28 @@ App.controller('atTheMngtController', ['$scope', '$http', '$filter', '$state', '
       };
       $scope.maxSize = 5; // 最多显示5页
       
+      $http
+        .post(''+url+'/branch/distribution_map', {
+            token: sessionStorage.token
+        })
+        .then(function(response) {
+            if ( response.data.code != 200 ) {
+                requestError(response, $state, ngDialog);
+            }
+            else{ 
+                $scope.allAtTheDate = response.data.data;
+                var toAtTheJson = JSON.stringify($scope.allAtTheDate);
+                sessionStorage.setItem('allAtThe', toAtTheJson);
+                map_init(JSON.parse(sessionStorage.allAtThe)); // 初始化地图 并传入该城市下的所有校区信息
+            }
+        }, function(x) {
+          ngDialog.open({
+            template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+            plain: true,
+            className: 'ngdialog-theme-default'
+          });
+        });
+
       getAtData = function(areaid, cp) {
           listLoading.css({'display':'block'});
           $http
@@ -3371,9 +3393,6 @@ App.controller('atTheMngtController', ['$scope', '$http', '$filter', '$state', '
                     var page = response.data.data.page_data;
                     $scope.showTotalItems = page.totalCount;
                     $scope.totalItems = page.totalCount - parseInt(page.totalCount/11);
-                    var toAtTheJson = JSON.stringify($scope.atThe);
-                    sessionStorage.setItem('atTheDate', toAtTheJson);
-                    map_init(JSON.parse(sessionStorage.atTheDate)); // 初始化地图 并传入该城市下的所有校区信息
                 }
             }, function(x) {
               listLoading.css({'display':'none'});
@@ -3392,7 +3411,6 @@ App.controller('atTheMngtController', ['$scope', '$http', '$filter', '$state', '
         
           var atTheMap = $('.atTheMap');
           if(atTheMap.text() == '地图分布') {
-            
             $('.atTheMap').text('关闭地图');
             $('.mapShow').css({
               'visibility':'visible',
