@@ -3,7 +3,7 @@
         <option value="0">全部</option>
         <option ng-repeat="x in PCAS" value="{{x.areaid + ',' + x.name}}">{{x.name}}</option>
     </select> 
-    <select class="bg-select" id="City" ng-change="selectCity(selectChengshi)" ng-model="selectChengshi">
+    <select class="bg-select" id="City" ng-change="selectCity(selectChengshi)" ng-model="selectChengshi" ng-init="selectChengshi='0'">
         <option value="">全部</option>
         <option ng-repeat="x in PCAS.city" value="{{x.areaid + ',' + x.name}}">{{x.name}}</option>
     </select> 
