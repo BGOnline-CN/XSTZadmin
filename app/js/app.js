@@ -6318,6 +6318,30 @@ App.controller('setLaunchCtrl', ['$scope', '$http', 'FileUploader', '$state', 'n
       laydate(end);
     }
 
+    $scope.pushVer = function(e) {
+        $(e.target).attr('disabled', true);
+        $http.post(''+url+'/setting/send_push', {
+            token: sessionStorage.token
+          }).then(function(response) {
+              $(e.target).attr('disabled', false);
+              if(response.data.code != 200) {
+                  requestError(response, $state, ngDialog);
+              }else { 
+                  ngDialog.open({
+                    template: "<p style='text-align:center;margin: 0;'>" + response.data.msg + "</p>",
+                    plain: true,
+                    className: 'ngdialog-theme-default'
+                  });
+              }
+          }, function(x) {
+              $(e.target).attr('disabled', false);
+              ngDialog.open({
+                template: "<p style='text-align:center;margin: 0;'>啊噢~服务器开小差啦！刷新试试吧！</p>",
+                plain: true,
+                className: 'ngdialog-theme-default'
+              });
+          })
+    }
     // $scope.slider1 = parseInt(localStorage.lockTime);
     
     // $scope.change = function() {
