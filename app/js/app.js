@@ -2037,6 +2037,8 @@ App.controller('commodityOrderController', ['$scope', '$sce', '$rootScope', '$ht
             template: "<p style='text-align:center;font-size:16px;color:#555;padding:10px;border-bottom:1px solid #EEE;'>填写发货信息</p>"+
                       "<div style='padding:10px 50px;width:100%;' class='clearfix'>"+
                           "<p style='margin-bottom:20px;'><span>订单号："+o+"</span></p>"+
+                          "<span style='float:left;line-height: 35px;'>填写快递单号</span>"+
+                          "<input class='form-control xxb-input' type='text' ng-model='expresson'>"+
                           "<span style='float:left;line-height: 35px;'>填写发货信息</span>"+
                           "<input class='form-control xxb-input' type='text' ng-model='payMsg'>"+
                           '<button type="button" class="mb-sm btn btn-warning" ng-click="sendPayMsg(\''+o+'\')" style="float:right;margin-top:30px;">确定</button>'+
@@ -2325,7 +2327,7 @@ App.controller('payMsgController', ['$scope', '$http', '$state', 'ngDialog',
           if($scope.payMsg.trim()) {
             $http
             .post(''+url+'/suppliesorder/send_supplies', {
-                token: sessionStorage.token, order_id: o, msg: $scope.payMsg
+                token: sessionStorage.token, order_id: o, msg: $scope.payMsg, expresson: $scope.expresson
             })
             .then(function(response) {
                 if ( response.data.code != 200 ) {
